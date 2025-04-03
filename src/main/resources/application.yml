@@ -1,4 +1,15 @@
+logging:
+  level:
+    org.springframework.security: DEBUG
+
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
   # .env import
   config:
     import: optional:file:./.env[.properties]
