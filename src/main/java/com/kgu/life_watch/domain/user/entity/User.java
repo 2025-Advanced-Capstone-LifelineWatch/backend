@@ -43,6 +43,18 @@ public class User extends BaseEntity {
     @Column(nullable = false, name = "social_worker_id")
     private Long socialWorkerId;
 
+    @Column(nullable = false)
+    private String birthDate;
+
+    @Column(nullable = false)
+    private String gender;
+
+    @Column
+    private String protectorContact; // 독거노인 전용
+
+    @Column(name = "assigned_elder_id")
+    private Long assignedElderId; // 사회복지사 전용 (optional)
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -51,4 +63,32 @@ public class User extends BaseEntity {
         ADMIN,
         SOCIAL_WORKER
     }
+    /**
+     *
+     * 필수 :
+     * 이름,
+     * 아이디,
+     * 패스워드,
+     * 생년월일(YYYY/MM/DD),
+     * 성별,
+     * 주소,
+     * 주민번호,
+     * 담당사회복지사 아이디,
+     * 핸드폰 번호
+     * 보호자 연락처
+     *
+     *
+     * 필수 :
+     * 이름,
+     * 아이디,
+     * 패스워드,
+     * 생년월일(YYYY/MM/DD),
+     * 성별,
+     * 주소,
+     * 주민번호,
+     * 핸드폰 번호
+     *
+     * 선택 :
+     * 담당환자 아이디
+     */
 }
