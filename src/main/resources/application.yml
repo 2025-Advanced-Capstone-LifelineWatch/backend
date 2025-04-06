@@ -5,7 +5,7 @@ logging:
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
@@ -20,3 +20,8 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASS}
     url: ${DB_URL}
+
+  # Jwt
+  jwt:
+    secret: life-watch-jwt-secret-key-1234567890!@#
+    access-token-expiration: 3600000 # 1시간
