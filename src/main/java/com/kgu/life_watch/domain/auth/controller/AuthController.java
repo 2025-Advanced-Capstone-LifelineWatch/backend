@@ -1,6 +1,7 @@
 package com.kgu.life_watch.domain.auth.controller;
 
-import com.kgu.life_watch.domain.auth.dto.SignUpRequest;
+import com.kgu.life_watch.domain.auth.dto.LoginRequest;
+import com.kgu.life_watch.domain.auth.dto.ElderlySignUpRequest;
 import com.kgu.life_watch.domain.auth.dto.SocialWorkerSignUpRequest;
 import com.kgu.life_watch.domain.auth.service.AuthService;
 import com.kgu.life_watch.global.dto.response.ApiResponse;
@@ -17,8 +18,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ApiResponse<Void> signUp(@Valid @RequestBody SignUpRequest request) {
-        authService.signUp(request);
+    public ApiResponse<Void> signUp(@Valid @RequestBody ElderlySignUpRequest request) {
+        authService.signUpElderly(request);
         return new ApiResponse<>(SuccessCode.REQUEST_OK);
     }
 
@@ -26,5 +27,11 @@ public class AuthController {
     public ApiResponse<Void> signUpSocialWorker(@Valid @RequestBody SocialWorkerSignUpRequest request) {
         authService.signUpSocialWorker(request);
         return new ApiResponse<>(SuccessCode.REQUEST_OK);
+    }
+
+    @PostMapping("/login")
+    public ApiResponse<String> login(@Valid @RequestBody LoginRequest request) {
+        String token = authService.login(request);
+        return new ApiResponse<>(token);
     }
 }

@@ -1,6 +1,9 @@
 package com.kgu.life_watch.domain.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
+
+import java.time.LocalDate;
 
 public record SocialWorkerSignUpRequest(
         @NotBlank(message = "이름은 필수입니다.")
@@ -30,11 +33,12 @@ public record SocialWorkerSignUpRequest(
         String rrn,
 
         @NotNull(message = "생년월일은 필수입니다.")
-        String birthDate, // "YYYY/MM/DD"
+        @JsonFormat(pattern = "yyyy/MM/dd")
+        LocalDate birthDate,
 
         @NotBlank(message = "성별은 필수입니다.")
+        @Pattern(regexp = "^(남|여)$", message = "성별은 '남' 또는 '여'로 입력해주세요.")
         String gender,
 
-        // 선택 값
-        Long assignedElderId
+        Long assignedElderId // Optional
 ) {}
