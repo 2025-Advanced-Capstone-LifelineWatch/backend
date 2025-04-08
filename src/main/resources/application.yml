@@ -1,15 +1,17 @@
-logging:
-  level:
-    org.springframework.security: DEBUG
-
 spring:
+  # Spring Data JPA
   jpa:
+    show-sql: 'false'
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+    open-in-view: 'false'
+    database-platform: org.hibernate.dialect.MySQLDialect
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
+        format_sql: true # SQL 포맷팅
+        highlight_sql: true # ANSI 코드에 색을 나타냄
+        use_sql_comments: true # SQL 내부에 /* */ 주석 추가
+
   # .env import
   config:
     import: optional:file:./.env[.properties]
@@ -25,3 +27,30 @@ spring:
   jwt:
     secret: ${JWT_SECRET}
     access-token-expiration: ${JWT_EXPIRATION}
+
+# logging
+logging:
+  level:
+    org:
+      springframework:
+        core:
+          LocalVariableTableParameterNameDiscoverer: error
+      hibernate:
+        sql: debug
+        type.descriptor.sql: trace # 파라미터 값 추가
+        sql.results.internal.ResultsHelper: INFO # OneToMany 조회 관련 로그 숨김
+    p6spy:
+
+# p6spy log
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false
+
+# Swagger 설정 추가
+springdoc:
+  show-login-endpoint: true
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v1/api-docs
