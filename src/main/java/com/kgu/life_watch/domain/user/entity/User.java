@@ -2,9 +2,10 @@ package com.kgu.life_watch.domain.user.entity;
 
 import java.time.LocalDate;
 
-import com.kgu.life_watch.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import com.kgu.life_watch.global.domain.BaseEntity;
 
 @Entity
 @Getter

@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.kgu.life_watch.global.dto.response.ApiResponse;
-import com.kgu.life_watch.global.exception.ErrorCode;
-import com.kgu.life_watch.global.exception.LifelineException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.kgu.life_watch.global.dto.response.ApiResponse;
+import com.kgu.life_watch.global.exception.ErrorCode;
+import com.kgu.life_watch.global.exception.LifelineException;
 
 /**
  * 전역 예외 처리 클래스

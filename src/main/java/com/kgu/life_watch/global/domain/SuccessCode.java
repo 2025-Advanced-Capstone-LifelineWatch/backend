@@ -2,10 +2,11 @@ package com.kgu.life_watch.global.domain;
 
 import org.springframework.http.HttpStatus;
 
-import com.kgu.life_watch.global.exception.ErrorCode;
-import com.kgu.life_watch.global.exception.LifelineException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import com.kgu.life_watch.global.exception.ErrorCode;
+import com.kgu.life_watch.global.exception.LifelineException;
 
 @Getter
 @RequiredArgsConstructor

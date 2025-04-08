@@ -15,11 +15,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import lombok.RequiredArgsConstructor;
+
 import com.kgu.life_watch.global.filter.FilterExceptionHandler;
 import com.kgu.life_watch.global.jwt.JwtAuthenticationFilter;
 import com.kgu.life_watch.global.jwt.JwtTokenProvider;
 import com.kgu.life_watch.global.security.CustomUserDetailsService;
-import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
