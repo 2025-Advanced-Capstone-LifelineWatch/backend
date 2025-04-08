@@ -2,14 +2,15 @@ package com.kgu.life_watch.domain.auth.controller;
 
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 import com.kgu.life_watch.domain.auth.dto.ElderlySignUpRequest;
 import com.kgu.life_watch.domain.auth.dto.LoginRequest;
 import com.kgu.life_watch.domain.auth.dto.SocialWorkerSignUpRequest;
 import com.kgu.life_watch.domain.auth.service.AuthService;
 import com.kgu.life_watch.global.domain.SuccessCode;
 import com.kgu.life_watch.global.dto.response.ApiResponse;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor

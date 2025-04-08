@@ -3,6 +3,8 @@ package com.kgu.life_watch.domain.auth.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+
 import com.kgu.life_watch.domain.auth.dto.ElderlySignUpRequest;
 import com.kgu.life_watch.domain.auth.dto.LoginRequest;
 import com.kgu.life_watch.domain.auth.dto.SocialWorkerSignUpRequest;
@@ -13,7 +15,6 @@ import com.kgu.life_watch.domain.user.repository.UserRepository;
 import com.kgu.life_watch.global.exception.ErrorCode;
 import com.kgu.life_watch.global.exception.LifelineException;
 import com.kgu.life_watch.global.jwt.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

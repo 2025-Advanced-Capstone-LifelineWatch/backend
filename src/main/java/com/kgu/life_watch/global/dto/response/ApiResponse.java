@@ -8,10 +8,11 @@ import org.springframework.data.domain.Slice;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.Getter;
+
 import com.kgu.life_watch.global.domain.SuccessCode;
 import com.kgu.life_watch.global.exception.ErrorCode;
 import com.kgu.life_watch.global.exception.LifelineException;
-import lombok.Getter;
 
 @Getter
 public class ApiResponse<T> {
