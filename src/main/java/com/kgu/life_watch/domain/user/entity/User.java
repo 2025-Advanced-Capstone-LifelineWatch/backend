@@ -12,12 +12,12 @@ import com.kgu.life_watch.global.domain.BaseEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(name = "`user`")
+@Table(name = "users")
 public class User extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long userId;
+  private Long id;
 
   @Column(nullable = false)
   private String name;
