@@ -41,7 +41,7 @@ public class ChatMessage {
   private User sender;
 
   @Column(nullable = false)
-  private String sender_name;
+  private String senderName;
 
   @Column(nullable = false)
   private String message;
