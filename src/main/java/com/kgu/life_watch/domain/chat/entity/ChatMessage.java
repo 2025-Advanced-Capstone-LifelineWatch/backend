@@ -14,11 +14,13 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.kgu.life_watch.domain.user.entity.User;
 
+@Getter
 @Entity
 @Table
 @Builder

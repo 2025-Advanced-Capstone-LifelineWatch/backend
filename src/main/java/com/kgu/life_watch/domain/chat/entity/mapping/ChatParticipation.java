@@ -9,11 +9,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import com.kgu.life_watch.domain.chat.entity.ChatRoom;
 import com.kgu.life_watch.domain.user.entity.User;
 
+@Getter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
