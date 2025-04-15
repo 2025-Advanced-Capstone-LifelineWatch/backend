@@ -11,6 +11,8 @@ import com.kgu.life_watch.domain.auth.dto.SocialWorkerSignUpRequest;
 import com.kgu.life_watch.domain.user.entity.ElderlyProfile;
 import com.kgu.life_watch.domain.user.entity.SocialWorkerProfile;
 import com.kgu.life_watch.domain.user.entity.User;
+import com.kgu.life_watch.domain.user.repository.ElderlyProfileRepository;
+import com.kgu.life_watch.domain.user.repository.SocialWorkerProfileRepository;
 import com.kgu.life_watch.domain.user.repository.UserRepository;
 import com.kgu.life_watch.global.exception.ErrorCode;
 import com.kgu.life_watch.global.exception.LifelineException;
@@ -20,6 +22,8 @@ import com.kgu.life_watch.global.jwt.JwtTokenProvider;
 @RequiredArgsConstructor
 public class AuthService {
   private final UserRepository userRepository;
+  private final ElderlyProfileRepository elderlyProfileRepository;
+  private final SocialWorkerProfileRepository socialWorkerProfileRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
 
@@ -53,8 +57,7 @@ public class AuthService {
             .protectorContact(request.protectorContact())
             .build();
 
-    user.setElderlyProfile(elderlyProfile); // 양방향 연관관계 설정
-    userRepository.save(user);
+    elderlyProfileRepository.save(elderlyProfile);
   }
 
   public void signUpSocialWorker(SocialWorkerSignUpRequest request) {
@@ -80,8 +83,7 @@ public class AuthService {
     SocialWorkerProfile workerProfile =
         SocialWorkerProfile.builder().user(user).assignedElderId(request.assignedElderId()).build();
 
-    user.setSocialWorkerProfile(workerProfile);
-    userRepository.save(user);
+    socialWorkerProfileRepository.save(workerProfile);
   }
 
   public String login(LoginRequest request) {
