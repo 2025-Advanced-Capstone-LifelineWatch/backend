@@ -1,7 +1,5 @@
 package com.kgu.life_watch.domain.chat.dto;
 
-import java.time.LocalDateTime;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -23,7 +21,6 @@ public record ChatMessageDto(
         .sender(sender)
         .senderName(sender.getName())
         .message(message)
-        .createdAt(LocalDateTime.now())
         .build();
   }
 }
