@@ -20,9 +20,6 @@ public class SocialWorkerProfile {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @Column(name = "assigned_elder_id")
-  private Long assignedElderId;
-
   @OneToMany(mappedBy = "socialWorkerProfile", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ElderlyProfile> assignedSeniors = new ArrayList<>();
 

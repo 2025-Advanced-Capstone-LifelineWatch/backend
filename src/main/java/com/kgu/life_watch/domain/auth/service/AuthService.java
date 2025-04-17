@@ -82,8 +82,7 @@ public class AuthService {
             .role(User.Role.SOCIAL_WORKER)
             .build();
 
-    SocialWorkerProfile profile =
-        SocialWorkerProfile.builder().user(user).assignedElderId(request.assignedElderId()).build();
+    SocialWorkerProfile profile = SocialWorkerProfile.builder().user(user).build();
 
     socialWorkerProfileRepository.save(profile);
   }
