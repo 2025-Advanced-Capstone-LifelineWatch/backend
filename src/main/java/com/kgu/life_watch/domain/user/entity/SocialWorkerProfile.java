@@ -1,5 +1,8 @@
 package com.kgu.life_watch.domain.user.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,10 +20,15 @@ public class SocialWorkerProfile {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @Column(name = "assigned_elder_id")
-  private Long assignedElderId; // 담당 독거노인 ID 선택적 필드
+  @OneToMany(mappedBy = "socialWorkerProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ElderlyProfile> assignedSeniors = new ArrayList<>();
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public void addElderly(ElderlyProfile elderly) {
+    assignedSeniors.add(elderly);
+    elderly.setSocialWorkerProfile(this);
   }
 }
