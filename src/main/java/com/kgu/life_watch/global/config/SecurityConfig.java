@@ -59,7 +59,8 @@ public class SecurityConfig {
                         "/api-docs",
                         "/api-docs/**",
                         "/v1/api-docs/**",
-                        "/health/**")
+                        "/health/**",
+                        "/chat/**")
                     .permitAll()
                     .requestMatchers("/api/auth/**")
                     .permitAll() // 로그인과 회원가입은 인증 없이 접근 가능
@@ -78,7 +79,10 @@ public class SecurityConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(
-        Arrays.asList("http://localhost:3000", "http://localhost:8080")); // 추후에 배포시 수정 필요
+        Arrays.asList(
+            "http://localhost:3000",
+            "http://localhost:8080",
+            "https://jiangxy.github.io")); // 추후에 배포시 수정 필요
     configuration.setAllowedMethods(
         Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD")); // 허용할 HTTP 메서드
     configuration.setAllowedHeaders(
