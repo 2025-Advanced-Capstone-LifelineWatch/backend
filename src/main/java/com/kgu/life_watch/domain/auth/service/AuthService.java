@@ -81,7 +81,6 @@ public class AuthService {
             .gender(request.gender())
             .role(User.Role.SOCIAL_WORKER)
             .build();
-
     SocialWorkerProfile profile = SocialWorkerProfile.builder().user(user).build();
 
     socialWorkerProfileRepository.save(profile);
