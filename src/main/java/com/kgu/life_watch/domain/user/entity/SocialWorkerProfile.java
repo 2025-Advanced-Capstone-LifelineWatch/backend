@@ -23,6 +23,10 @@ public class SocialWorkerProfile {
   @OneToMany(mappedBy = "socialWorkerProfile", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ElderlyProfile> assignedSeniors = new ArrayList<>();
 
+  @Column(name = "fcm_token")
+  private String fcmToken; // fcm 통신을 위해 추가된 필드
+
+
   public void setUser(User user) {
     this.user = user;
   }
