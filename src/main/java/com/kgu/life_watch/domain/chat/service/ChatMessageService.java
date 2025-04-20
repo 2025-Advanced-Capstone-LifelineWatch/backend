@@ -32,11 +32,11 @@ public class ChatMessageService {
   private final UserRepository userRepository;
 
   @Transactional
-  public ChatMessage createChatMessage(ChatMessageDto request, String userId) {
+  public ChatMessage createChatMessage(ChatMessageDto request) {
 
     User sender =
         userRepository
-            .findById(Long.parseLong(userId))
+            .findById(request.userId())
             .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
 
     ChatRoom chatRoom =

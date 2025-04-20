@@ -8,10 +8,14 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -65,7 +69,8 @@ public class RabbitConfig {
   @Bean
   public RabbitTemplate rabbitTemplate() {
     RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
-
+    rabbitTemplate.setMessageConverter(jsonMessageConverter());
+    rabbitTemplate.setRoutingKey(routingKey);
     rabbitTemplate.setExchange(chatExchangeName);
     return rabbitTemplate;
   }
@@ -80,5 +85,22 @@ public class RabbitConfig {
     factory.setUsername(username);
     factory.setPassword(password);
     return factory;
+  }
+
+  // 메시지를 JSON형식으로 직렬화하고 역직렬화하는데 사용되는 변환기
+  // RabbitMQ 메시지를 JSON형식으로 보내고 받을 수 있음
+  @Bean
+  public Jackson2JsonMessageConverter jsonMessageConverter() {
+    // LocalDateTime serializable을 위해
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
+    objectMapper.registerModule(dateTimeModule());
+
+    return new Jackson2JsonMessageConverter(objectMapper);
+  }
+
+  @Bean
+  public JavaTimeModule dateTimeModule() {
+    return new JavaTimeModule();
   }
 }
