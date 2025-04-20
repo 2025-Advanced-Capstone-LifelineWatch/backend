@@ -26,7 +26,6 @@ public class SocialWorkerProfile {
   @Column(name = "fcm_token")
   private String fcmToken; // fcm 통신을 위해 추가된 필드
 
-
   public void setUser(User user) {
     this.user = user;
   }
