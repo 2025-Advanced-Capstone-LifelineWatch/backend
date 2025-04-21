@@ -50,6 +50,9 @@ public class User extends BaseEntity {
   @Column(nullable = false)
   private Role role;
 
+  @Column(name = "fcm_token")
+  private String fcmToken;
+
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private ElderlyProfile elderlyProfile;
 
