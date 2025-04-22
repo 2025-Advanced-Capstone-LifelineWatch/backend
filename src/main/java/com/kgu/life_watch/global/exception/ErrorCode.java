@@ -61,7 +61,10 @@ public enum ErrorCode {
   PASSWORD_REQUIRED(HttpStatus.BAD_REQUEST, "비밀번호는 필수입니다."),
   PASSWORD_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "비밀번호는 영문과 숫자를 혼합하여 10자 이상이어야 합니다."),
   GENDER_REQUIRED(HttpStatus.BAD_REQUEST, "성별은 필수입니다."),
-  PROFILE_IMAGE_REQUIRED(HttpStatus.BAD_REQUEST, "프로필 이미지 선택은 필수입니다.");
+  PROFILE_IMAGE_REQUIRED(HttpStatus.BAD_REQUEST, "프로필 이미지 선택은 필수입니다."),
+
+  // alarm
+  ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰을 찾을 수 없습니다.");
 
   private final HttpStatus status;
   private final String message;
