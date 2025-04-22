@@ -10,6 +10,7 @@ import com.kgu.life_watch.domain.user.entity.User;
 
 @Builder
 public record ChatMessageDto(
+    Long userId,
     Long roomId,
     @NotBlank(message = "메시지는 필수입니다.")
         @Size(min = 1, max = 200, message = "메시지는 최소 1자, 최대 200자까지 입력 가능합니다.")

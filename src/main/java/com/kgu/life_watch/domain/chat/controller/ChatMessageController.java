@@ -1,8 +1,8 @@
 package com.kgu.life_watch.domain.chat.controller;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import jakarta.validation.Valid;
@@ -20,17 +20,21 @@ import com.kgu.life_watch.domain.chat.service.ChatMessageService;
 public class ChatMessageController {
 
   private final ChatMessageService chatMessageService;
-  private final SimpMessagingTemplate messagingTemplate;
+  private final RabbitTemplate rabbitTemplate;
 
-  @MessageMapping("/message")
-  public void sendMessage(@Valid ChatMessageDto request, SimpMessageHeaderAccessor accessor) {
-    String userId = (String) accessor.getSessionAttributes().get("senderUserId");
+  @Value("${rabbitmq.chat.exchange.name}")
+  private String CHAT_EXCHANGE_NAME;
+
+  @MessageMapping("chat.message")
+  public void sendMessage(@Valid ChatMessageDto request) {
     // 실시간으로 방에서 채팅하기
-    ChatMessage newChatMessage = chatMessageService.createChatMessage(request, userId);
+    ChatMessage newChatMessage = chatMessageService.createChatMessage(request);
     log.info("received message: {}", request);
 
     // 방에 있는 모든 사용자에게 메시지 전송
-    messagingTemplate.convertAndSend(
-        "/sub/channel/" + request.roomId(), ChatMessageResponse.fromEntity(newChatMessage));
+    rabbitTemplate.convertAndSend(
+        CHAT_EXCHANGE_NAME,
+        "room." + request.roomId(),
+        ChatMessageResponse.fromEntity(newChatMessage));
   }
 }

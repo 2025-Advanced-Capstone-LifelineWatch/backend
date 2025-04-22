@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import com.kgu.life_watch.domain.user.dto.ElderlyAssignmentRequest;
+import com.kgu.life_watch.domain.user.dto.UserProfileResponse;
 import com.kgu.life_watch.domain.user.entity.User;
 import com.kgu.life_watch.domain.user.service.UserService;
 import com.kgu.life_watch.global.dto.response.ApiResponse;
@@ -23,10 +24,10 @@ public class UserController {
   // 현재 인증된 사용자의 정보를 주입받는다.
   // SecurityContextHolder에 저장된 Authentication에서 CustomUserDetails를 꺼내어 자동 주입함
   @GetMapping("/me")
-  public ApiResponse<String> getCurrentUser(
+  public ApiResponse<UserProfileResponse> getCurrentUser(
       @AuthenticationPrincipal CustomUserDetails userDetails) {
     User user = userDetails.user(); // CustomUserDetails 내부에 저장된 실제 User 엔티티를 꺼냄
-    return new ApiResponse<>("현재 로그인한 사용자의 ID: " + user.getLoginId());
+    return new ApiResponse<>(userService.getProfile(user));
   }
 
   @GetMapping("/role-check")
