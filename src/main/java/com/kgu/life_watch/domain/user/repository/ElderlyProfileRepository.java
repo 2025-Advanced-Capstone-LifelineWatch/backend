@@ -1,14 +1,11 @@
 package com.kgu.life_watch.domain.user.repository;
 
-
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.kgu.life_watch.domain.user.entity.ElderlyProfile;
-
 
 public interface ElderlyProfileRepository extends JpaRepository<ElderlyProfile, Long> {
   // @EntityGraph는 LAZY 전략을 유지하면서도 필요한 순간에만 명시적으로 fetch join을 해주는 방식
@@ -16,4 +13,3 @@ public interface ElderlyProfileRepository extends JpaRepository<ElderlyProfile, 
   @EntityGraph(attributePaths = "socialWorkerProfile")
   Optional<ElderlyProfile> findWithSocialWorkerProfileById(Long id);
 }
-
