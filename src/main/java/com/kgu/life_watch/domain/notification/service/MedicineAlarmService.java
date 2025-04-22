@@ -1,12 +1,14 @@
 package com.kgu.life_watch.domain.notification.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import com.kgu.life_watch.domain.notification.dto.MedicineAlarmDto;
 import com.kgu.life_watch.domain.notification.dto.MedicineAlarmRequest;
 import com.kgu.life_watch.domain.notification.entity.MedicineAlarm;
 import com.kgu.life_watch.domain.notification.entity.MedicineAlarm.AlarmStatus;
@@ -44,8 +46,12 @@ public class MedicineAlarmService {
 
   // 약 알람 조회
   @Transactional(readOnly = true)
-  public List<MedicineAlarm> getAlarms(Long userId) {
-    return medicineAlarmRepository.findAllByUserId(userId);
+  public List<MedicineAlarmDto> getAlarms(Long userId) {
+    List<MedicineAlarm> alarms = medicineAlarmRepository.findAllByUserId(userId);
+
+    return alarms.stream()
+        .map(MedicineAlarmDto::fromEntity) // 엔티티 → DTO로 변환
+        .collect(Collectors.toList());
   }
 
   // 약 알람 복용 완료 처리
