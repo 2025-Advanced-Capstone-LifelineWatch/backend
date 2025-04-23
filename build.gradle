@@ -63,6 +63,9 @@ dependencies {
 	//alram
 	implementation 'com.google.firebase:firebase-admin:9.2.0'
 
+	//sns
+	implementation 'net.nurigo:sdk:4.2.7'
+
 }
 
 // Spotless 설정 (코드 스타일 자동 정리 도구)

@@ -23,4 +23,5 @@ public record ElderlySignUpRequest(
     @NotBlank(message = "성별은 필수입니다.")
         @Pattern(regexp = "^(남|여)$", message = "성별은 '남' 또는 '여'로 입력해주세요.")
         String gender,
-    @NotBlank(message = "보호자 연락처는 필수입니다.") String protectorContact) {}
+    @NotBlank(message = "보호자 연락처는 필수입니다.") String protectorContact,
+    @NotBlank(message = "인증번호는 필수입니다.") String verificationCode) {}
