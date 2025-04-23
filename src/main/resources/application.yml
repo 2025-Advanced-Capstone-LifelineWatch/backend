@@ -74,3 +74,8 @@ rabbitmq:
       name: ${RABBITMQ_CHAT_EXCHANGE_NAME}
     routing:
       key: ${RABBITMQ_CHAT_ROUTING_KEY}
+
+# sms
+coolsms:
+  api-key: ${API_KEY}
+  api-secret: ${API_SECRET}
