@@ -26,10 +26,16 @@ public class AuthService {
   private final SocialWorkerProfileRepository socialWorkerProfileRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
+  private final AuthSmsService authSmsService;
 
   public void signUpElderly(ElderlySignUpRequest request) {
     if (userRepository.existsByLoginId(request.loginId())) {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
+    }
+
+    // SMS 인증번호 검증 로직
+    if (!authSmsService.verifyCode(request.phoneNumber(), request.verificationCode())) {
+      throw LifelineException.from(ErrorCode.SMS_VERIFICATION_FAILED);
     }
 
     User user =
@@ -46,7 +52,6 @@ public class AuthService {
             .role(User.Role.USER)
             .build();
 
-    // 담당 사회복지사 ID로 프로필 조회
     SocialWorkerProfile socialWorkerProfile =
         socialWorkerProfileRepository
             .findById(request.socialWorkerId())
@@ -68,6 +73,11 @@ public class AuthService {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
     }
 
+    // SMS 인증번호 검증 로직
+    if (!authSmsService.verifyCode(request.phoneNumber(), request.verificationCode())) {
+      throw LifelineException.from(ErrorCode.SMS_VERIFICATION_FAILED);
+    }
+
     User user =
         User.builder()
             .name(request.name())
@@ -81,8 +91,8 @@ public class AuthService {
             .gender(request.gender())
             .role(User.Role.SOCIAL_WORKER)
             .build();
-    SocialWorkerProfile profile = SocialWorkerProfile.builder().user(user).build();
 
+    SocialWorkerProfile profile = SocialWorkerProfile.builder().user(user).build();
     socialWorkerProfileRepository.save(profile);
   }
 
