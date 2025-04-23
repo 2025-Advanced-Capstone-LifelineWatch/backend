@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -14,6 +15,7 @@ import com.kgu.life_watch.domain.auth.entity.SmsVerification;
 import com.kgu.life_watch.domain.auth.repository.SmsVerificationRepository;
 
 @Service
+@Transactional
 public class AuthSmsService {
 
   private final SmsVerificationRepository smsVerificationRepository;
@@ -51,7 +53,6 @@ public class AuthSmsService {
         .map(
             verification -> {
               verification.markAsUsed();
-              smsVerificationRepository.save(verification);
               return true;
             })
         .orElse(false);
