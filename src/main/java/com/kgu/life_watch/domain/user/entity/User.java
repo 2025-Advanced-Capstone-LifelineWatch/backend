@@ -74,4 +74,8 @@ public class User extends BaseEntity {
     this.socialWorkerProfile = socialWorkerProfile;
     socialWorkerProfile.setUser(this);
   }
+
+  public void changePassword(String newPassword) {
+    this.password = newPassword;
+  }
 }
