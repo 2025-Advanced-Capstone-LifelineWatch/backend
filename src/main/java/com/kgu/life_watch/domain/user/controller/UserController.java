@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,7 @@ import com.kgu.life_watch.global.security.CustomUserDetails;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user")
+@Tag(name = "UserController", description = "유저 관련 API")
 public class UserController {
 
   private final UserService userService;

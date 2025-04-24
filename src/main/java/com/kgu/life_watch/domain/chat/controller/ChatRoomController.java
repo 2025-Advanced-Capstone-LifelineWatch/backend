@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 import com.kgu.life_watch.domain.chat.dto.response.ChatMessageResponse;
@@ -24,6 +25,7 @@ import com.kgu.life_watch.global.security.CustomUserDetails;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/chat-room")
+@Tag(name = "ChatRoomController", description = "채팅방 관련 API")
 public class ChatRoomController {
 
   private final ChatRoomService chatRoomService;
