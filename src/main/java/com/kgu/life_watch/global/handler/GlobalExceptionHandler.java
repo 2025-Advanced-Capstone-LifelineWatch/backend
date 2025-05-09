@@ -87,6 +87,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ApiResponse<Void>> handleUnknownException(
       Exception e, HttpServletRequest request) {
+    String uri = request.getRequestURI();
+    if (uri != null && uri.startsWith("/actuator/health")) {
+      return null; // Spring actuator가 자체적으로 처리하도록
+    }
+
     logError(request, e);
 
     ApiResponse<Void> response = new ApiResponse<>(ErrorCode.INTERNAL_SEVER_ERROR);
