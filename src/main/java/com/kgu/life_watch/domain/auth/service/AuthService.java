@@ -28,12 +28,11 @@ public class AuthService {
   private final JwtTokenProvider jwtTokenProvider;
   private final AuthSmsService authSmsService;
 
-  public void signUpElderly(ElderlySignUpRequest request) {
+  public void signUpElderly(ElderlySignUpRequest request, String fcmToken) {
     if (userRepository.existsByLoginId(request.loginId())) {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
     }
 
-    // SMS 인증번호 검증 로직
     if (!authSmsService.verifyCode(request.phoneNumber(), request.verificationCode())) {
       throw LifelineException.from(ErrorCode.SMS_VERIFICATION_FAILED);
     }
@@ -49,6 +48,7 @@ public class AuthService {
             .rrn(request.rrn())
             .birthDate(request.birthDate())
             .gender(request.gender())
+            .fcmToken(fcmToken)
             .role(User.Role.USER)
             .build();
 
@@ -68,12 +68,11 @@ public class AuthService {
     elderlyProfileRepository.save(elderlyProfile);
   }
 
-  public void signUpSocialWorker(SocialWorkerSignUpRequest request) {
+  public void signUpSocialWorker(SocialWorkerSignUpRequest request, String fcmToken) {
     if (userRepository.existsByLoginId(request.loginId())) {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
     }
 
-    // SMS 인증번호 검증 로직
     if (!authSmsService.verifyCode(request.phoneNumber(), request.verificationCode())) {
       throw LifelineException.from(ErrorCode.SMS_VERIFICATION_FAILED);
     }
@@ -89,6 +88,7 @@ public class AuthService {
             .rrn(request.rrn())
             .birthDate(request.birthDate())
             .gender(request.gender())
+            .fcmToken(fcmToken)
             .role(User.Role.SOCIAL_WORKER)
             .build();
 
@@ -96,7 +96,7 @@ public class AuthService {
     socialWorkerProfileRepository.save(profile);
   }
 
-  public String login(LoginRequest request) {
+  public String login(LoginRequest request, String fcmToken) {
     User user =
         userRepository
             .findByLoginId(request.loginId())
@@ -105,6 +105,9 @@ public class AuthService {
     if (!passwordEncoder.matches(request.password(), user.getPassword())) {
       throw LifelineException.from(ErrorCode.INCORRECT_PASSWORD);
     }
+
+    user.updateFcmToken(fcmToken); // 로그인 시 토큰 갱신
+    userRepository.save(user);
 
     return jwtTokenProvider.generateToken(user);
   }
