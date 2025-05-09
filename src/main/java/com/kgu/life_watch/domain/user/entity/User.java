@@ -78,4 +78,9 @@ public class User extends BaseEntity {
   public void changePassword(String newPassword) {
     this.password = newPassword;
   }
+
+  // FCM 토큰 업데이트 메서드
+  public void updateFcmToken(String token) {
+    this.fcmToken = token;
+  }
 }
