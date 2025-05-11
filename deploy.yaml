@@ -19,7 +19,7 @@ spec:
         - name: regcred
       containers:
         - name: test-backend
-          image: hjh-test-registry.kr.ncr.ntruss.com/test-firebase:latest
+          image: hjh-test-registry.kr.ncr.ntruss.com/help-me:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -61,12 +61,13 @@ metadata:
   namespace: test-back
   annotations:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /health
 spec:
   ingressClassName: alb
   rules:
     - http:
         paths:
-          - path: /back
+          - path: /
             pathType: Prefix
             backend:
               service:
