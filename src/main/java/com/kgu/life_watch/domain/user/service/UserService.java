@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import com.kgu.life_watch.domain.chat.service.ChatRoomService;
 import com.kgu.life_watch.domain.user.dto.UserProfileResponse;
 import com.kgu.life_watch.domain.user.entity.ElderlyProfile;
 import com.kgu.life_watch.domain.user.entity.SocialWorkerProfile;
@@ -19,6 +20,7 @@ import com.kgu.life_watch.global.exception.LifelineException;
 public class UserService {
   private final ElderlyProfileRepository elderlyProfileRepository;
   private final SocialWorkerProfileRepository socialWorkerProfileRepository;
+  private final ChatRoomService chatRoomService;
 
   @Transactional
   public void assignElderly(Long elderlyId, Long socialWorkerId) {
@@ -33,6 +35,9 @@ public class UserService {
 
     // 연관관계 편의 메서드를 통해 노인을 사회복지사에게 할당
     socialWorker.addElderly(elderly);
+
+    // 노인 할당시 채팅방 생성
+    chatRoomService.createChatRoom(elderly.getUser(), socialWorkerId);
   }
 
   @Transactional
