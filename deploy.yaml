@@ -75,3 +75,10 @@ spec:
                 name: test-backend-svc
                 port:
                   number: 80
+          - path: /ai
+            pathType: Prefix
+            backend:
+              service:
+                name: flask-ai-svc
+                port:
+                  number: 80
