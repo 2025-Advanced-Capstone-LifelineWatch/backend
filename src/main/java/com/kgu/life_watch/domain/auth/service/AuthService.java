@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import com.kgu.life_watch.domain.auth.dto.ElderlySignUpRequest;
 import com.kgu.life_watch.domain.auth.dto.LoginRequest;
 import com.kgu.life_watch.domain.auth.dto.SocialWorkerSignUpRequest;
+import com.kgu.life_watch.domain.chat.service.ChatRoomService;
 import com.kgu.life_watch.domain.user.entity.ElderlyProfile;
 import com.kgu.life_watch.domain.user.entity.SocialWorkerProfile;
 import com.kgu.life_watch.domain.user.entity.User;
@@ -27,6 +28,7 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
   private final AuthSmsService authSmsService;
+  private final ChatRoomService chatRoomService;
 
   public void signUpElderly(ElderlySignUpRequest request, String fcmToken) {
     if (userRepository.existsByLoginId(request.loginId())) {
@@ -66,6 +68,10 @@ public class AuthService {
             .build();
 
     elderlyProfileRepository.save(elderlyProfile);
+    elderlyProfileRepository.flush();
+
+    // 담당 사회복지사와 채팅방 생성
+    chatRoomService.createChatRoom(user, request.socialWorkerId());
   }
 
   public void signUpSocialWorker(SocialWorkerSignUpRequest request, String fcmToken) {
