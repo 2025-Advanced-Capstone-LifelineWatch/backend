@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.kgu.life_watch.domain.auth.dto.ElderlySignUpRequest;
 import com.kgu.life_watch.domain.auth.dto.LoginRequest;
+import com.kgu.life_watch.domain.auth.dto.LoginResponse;
 import com.kgu.life_watch.domain.auth.dto.SocialWorkerSignUpRequest;
 import com.kgu.life_watch.domain.auth.service.AuthService;
 import com.kgu.life_watch.global.domain.SuccessCode;
@@ -42,10 +43,8 @@ public class AuthController {
 
   @PostMapping("/login")
   @Operation(summary = "로그인 API", description = "로그인 API입니다.")
-  public ApiResponse<String> login(
-      @Valid @RequestBody LoginRequest request,
-      @RequestHeader(value = "fcm_token", required = false) String fcmToken) {
-    String token = authService.login(request, fcmToken);
-    return new ApiResponse<>(token);
+  public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+    LoginResponse response = authService.login(request);
+    return new ApiResponse<>(response);
   }
 }
