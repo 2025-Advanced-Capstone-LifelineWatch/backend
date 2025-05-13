@@ -115,17 +115,33 @@ public class AuthService {
       throw LifelineException.from(ErrorCode.INCORRECT_PASSWORD);
     }
 
+    boolean isSocialWorker = user.getRole() == User.Role.SOCIAL_WORKER;
+
+    if (isSocialWorker && user.getSocialWorkerProfile() != null) {
+      return new LoginResponse(
+          user.getName(),
+          user.getBirthDate(),
+          null, // 보호자 이름 없음
+          null, // 보호자 연락처 없음
+          null, // 본인이 사회복지사
+          null, // 본인이 사회복지사
+          user.getId(),
+          true);
+    }
+
     if (user.getRole() == User.Role.USER && user.getElderlyProfile() != null) {
       ElderlyProfile elderly = user.getElderlyProfile();
       SocialWorkerProfile worker = elderly.getSocialWorkerProfile();
 
       return new LoginResponse(
-          worker.getUser().getName(),
-          worker.getUser().getPhoneNumber(),
+          user.getName(),
           user.getBirthDate(),
           elderly.getProtectorName(),
           elderly.getProtectorContact(),
-          user.getId());
+          worker.getUser().getName(),
+          worker.getUser().getPhoneNumber(),
+          user.getId(),
+          false);
     }
 
     throw LifelineException.from(ErrorCode.INCORRECT_ACCOUNT);
