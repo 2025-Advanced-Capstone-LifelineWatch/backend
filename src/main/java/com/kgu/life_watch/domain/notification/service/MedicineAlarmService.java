@@ -44,6 +44,17 @@ public class MedicineAlarmService {
     medicineAlarmRepository.save(alarm);
   }
 
+  // 약 알람 삭제
+  @Transactional
+  public void deleteAlarm(Long alarmId) {
+    MedicineAlarm alarm =
+        medicineAlarmRepository
+            .findById(alarmId)
+            .orElseThrow(() -> LifelineException.from(ErrorCode.ALARM_NOT_FOUND));
+
+    medicineAlarmRepository.delete(alarm);
+  }
+
   // 약 알람 조회
   @Transactional(readOnly = true)
   public List<MedicineAlarmDto> getAlarms(Long userId) {
