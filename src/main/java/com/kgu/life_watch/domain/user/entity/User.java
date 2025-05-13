@@ -25,7 +25,7 @@ public class User extends BaseEntity {
   @Column(nullable = false, unique = true)
   private String loginId;
 
-  @Column(nullable = false)
+  @Column(nullable = true) // null 값 허용해달라고 해서 수정
   private String email;
 
   @Column(nullable = false)
