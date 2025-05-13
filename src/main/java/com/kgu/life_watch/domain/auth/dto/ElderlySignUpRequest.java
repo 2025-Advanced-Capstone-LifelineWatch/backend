@@ -3,12 +3,13 @@ package com.kgu.life_watch.domain.auth.dto;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.firebase.database.annotations.Nullable;
 import jakarta.validation.constraints.*;
 
 public record ElderlySignUpRequest(
     @NotBlank(message = "이름은 필수입니다.") String name,
     @NotBlank(message = "아이디는 필수입니다.") String loginId,
-    @NotBlank(message = "이메일은 필수입니다.") @Email(message = "이메일 형식이 아닙니다.") String email,
+    @Nullable @Email(message = "이메일 형식이 아니면서 설정했을 때만 활용") String email,
     @NotBlank(message = "비밀번호는 필수입니다.")
         @Pattern(
             regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{10,}$",
@@ -24,4 +25,5 @@ public record ElderlySignUpRequest(
         @Pattern(regexp = "^(남|여)$", message = "성별은 '남' 또는 '여'로 입력해주세요.")
         String gender,
     @NotBlank(message = "보호자 연락처는 필수입니다.") String protectorContact,
+    @NotBlank(message = "보호자 이름은 필수입니다.") String protectorName,
     @NotBlank(message = "인증번호는 필수입니다.") String verificationCode) {}

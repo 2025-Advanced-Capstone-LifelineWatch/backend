@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.kgu.life_watch.domain.auth.dto.ElderlySignUpRequest;
 import com.kgu.life_watch.domain.auth.dto.LoginRequest;
+import com.kgu.life_watch.domain.auth.dto.LoginResponse;
 import com.kgu.life_watch.domain.auth.dto.SocialWorkerSignUpRequest;
 import com.kgu.life_watch.domain.chat.service.ChatRoomService;
 import com.kgu.life_watch.domain.user.entity.ElderlyProfile;
@@ -64,6 +65,7 @@ public class AuthService {
             .user(user)
             .drn(request.drn())
             .protectorContact(request.protectorContact())
+            .protectorName(request.protectorName())
             .socialWorkerProfile(socialWorkerProfile)
             .build();
 
@@ -102,7 +104,8 @@ public class AuthService {
     socialWorkerProfileRepository.save(profile);
   }
 
-  public String login(LoginRequest request, String fcmToken) {
+  // string 대신 dto 반환해부리기
+  public LoginResponse login(LoginRequest request) {
     User user =
         userRepository
             .findByLoginId(request.loginId())
@@ -112,9 +115,35 @@ public class AuthService {
       throw LifelineException.from(ErrorCode.INCORRECT_PASSWORD);
     }
 
-    user.updateFcmToken(fcmToken); // 로그인 시 토큰 갱신
-    userRepository.save(user);
+    boolean isSocialWorker = user.getRole() == User.Role.SOCIAL_WORKER;
 
-    return jwtTokenProvider.generateToken(user);
+    if (isSocialWorker && user.getSocialWorkerProfile() != null) {
+      return new LoginResponse(
+          user.getName(),
+          user.getBirthDate(),
+          null, // 보호자 이름 없음
+          null, // 보호자 연락처 없음
+          null, // 본인이 사회복지사
+          null, // 본인이 사회복지사
+          user.getId(),
+          true);
+    }
+
+    if (user.getRole() == User.Role.USER && user.getElderlyProfile() != null) {
+      ElderlyProfile elderly = user.getElderlyProfile();
+      SocialWorkerProfile worker = elderly.getSocialWorkerProfile();
+
+      return new LoginResponse(
+          user.getName(),
+          user.getBirthDate(),
+          elderly.getProtectorName(),
+          elderly.getProtectorContact(),
+          worker.getUser().getName(),
+          worker.getUser().getPhoneNumber(),
+          user.getId(),
+          false);
+    }
+
+    throw LifelineException.from(ErrorCode.INCORRECT_ACCOUNT);
   }
 }

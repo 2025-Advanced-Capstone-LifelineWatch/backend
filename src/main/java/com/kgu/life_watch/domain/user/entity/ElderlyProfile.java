@@ -29,6 +29,9 @@ public class ElderlyProfile {
   @Column(nullable = false)
   private String protectorContact; // 보호자 연락처 필수
 
+  @Column(nullable = false, name = "protector_name")
+  private String protectorName; // 보호자 이름 넣어달라고해서 추가
+
   public void setUser(User user) {
     this.user = user;
   }

@@ -38,6 +38,14 @@ public class AlarmController {
     return new ApiResponse<>(alarmDtos);
   }
 
+  /** 알람 삭제 기능 */
+  @DeleteMapping("/{alarmId}")
+  @Operation(summary = "복용 약 알람 삭제 ", description = "복용하는 약 알람을 삭제하는 API입니다.")
+  public ApiResponse<Void> deleteAlarm(@PathVariable Long alarmId) {
+    medicineAlarmService.deleteAlarm(alarmId);
+    return new ApiResponse<>(SuccessCode.REQUEST_OK);
+  }
+
   /** 복용 완료 처리 */
   @PatchMapping("/{alarmId}/complete")
   @Operation(summary = "복용 약 완료 처리 API", description = "복용하는 약을 완료 처리하는 API입니다.")
