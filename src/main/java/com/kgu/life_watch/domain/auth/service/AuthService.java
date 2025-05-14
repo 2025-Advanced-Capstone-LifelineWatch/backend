@@ -84,10 +84,6 @@ public class AuthService {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
     }
 
-    if (!authSmsService.verifyCode(request.phoneNumber(), request.verificationCode())) {
-      throw LifelineException.from(ErrorCode.SMS_VERIFICATION_FAILED);
-    }
-
     User user =
         User.builder()
             .name(request.name())
