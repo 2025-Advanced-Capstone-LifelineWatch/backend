@@ -1,6 +1,7 @@
 package com.kgu.life_watch.domain.notification.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class FirebaseMessageService {
 
   private final ElderlyProfileRepository elderlyProfileRepository;
 
+  @Transactional(readOnly = true)
   public void sendEmergencyAlert(Long elderlyId, String label, String explanation) {
     // 노인 조회 (+ 사회복지사도 함께 fetch)
     ElderlyProfile elderly =
@@ -47,6 +49,7 @@ public class FirebaseMessageService {
     }
   }
 
+  @Transactional(readOnly = true)
   public void sendMedicineAlarm(MedicineAlarm alarm) {
     String fcmToken = alarm.getUser().getFcmToken();
     if (fcmToken == null) {
