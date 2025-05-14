@@ -19,7 +19,7 @@ spec:
         - name: regcred
       containers:
         - name: test-backend
-          image: hjh-test-registry.kr.ncr.ntruss.com/help-me:latest
+          image: hjh-test-registry.kr.ncr.ntruss.com/back-02:latest #이미지 경로 반드시 변경
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -73,12 +73,5 @@ spec:
             backend:
               service:
                 name: test-backend-svc
-                port:
-                  number: 80
-          - path: /ai
-            pathType: Prefix
-            backend:
-              service:
-                name: flask-ai-svc
                 port:
                   number: 80
