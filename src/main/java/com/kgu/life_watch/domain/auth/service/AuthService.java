@@ -40,6 +40,13 @@ public class AuthService {
       throw LifelineException.from(ErrorCode.SMS_VERIFICATION_FAILED);
     }
 
+    Long socialWorkerId;
+    try {
+      socialWorkerId = Long.valueOf(request.socialWorkerId()); // 명시적 변환
+    } catch (NumberFormatException e) {
+      throw LifelineException.from(ErrorCode.INVALID_REQUEST);
+    }
+
     User user =
         User.builder()
             .name(request.name())
@@ -57,7 +64,7 @@ public class AuthService {
 
     SocialWorkerProfile socialWorkerProfile =
         socialWorkerProfileRepository
-            .findById(request.socialWorkerId())
+            .findById(socialWorkerId)
             .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
 
     ElderlyProfile elderlyProfile =
@@ -73,7 +80,7 @@ public class AuthService {
     elderlyProfileRepository.flush();
 
     // 담당 사회복지사와 채팅방 생성
-    chatRoomService.createChatRoom(user, request.socialWorkerId());
+    chatRoomService.createChatRoom(user, Long.valueOf(request.socialWorkerId()));
   }
 
   public void signUpSocialWorker(SocialWorkerSignUpRequest request, String fcmToken) {
@@ -115,26 +122,14 @@ public class AuthService {
       throw LifelineException.from(ErrorCode.INCORRECT_PASSWORD);
     }
 
-    boolean isSocialWorker = user.getRole() == User.Role.SOCIAL_WORKER;
-
-    if (isSocialWorker && user.getSocialWorkerProfile() != null) {
-      return new LoginResponse(
-          user.getName(),
-          user.getBirthDate(),
-          null, // 보호자 이름 없음
-          null, // 보호자 연락처 없음
-          null, // 본인이 사회복지사
-          null, // 본인이 사회복지사
-          user.getId(),
-          true);
-    }
+    String jwt = jwtTokenProvider.generateToken(user);
 
     if (user.getRole() == User.Role.USER && user.getElderlyProfile() != null) {
       ElderlyProfile elderly = user.getElderlyProfile();
       SocialWorkerProfile worker = elderly.getSocialWorkerProfile();
 
       return new LoginResponse(
-          user.getName(),
+          jwt,
           user.getBirthDate(),
           elderly.getProtectorName(),
           elderly.getProtectorContact(),
@@ -142,6 +137,11 @@ public class AuthService {
           worker.getUser().getPhoneNumber(),
           user.getId(),
           false);
+    }
+
+    if (user.getRole() == User.Role.SOCIAL_WORKER && user.getSocialWorkerProfile() != null) {
+      return new LoginResponse(
+          jwt, user.getBirthDate(), null, null, null, null, user.getId(), true);
     }
 
     throw LifelineException.from(ErrorCode.INCORRECT_ACCOUNT);
