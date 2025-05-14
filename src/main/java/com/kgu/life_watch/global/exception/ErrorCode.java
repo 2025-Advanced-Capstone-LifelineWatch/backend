@@ -70,7 +70,9 @@ public enum ErrorCode {
   SMS_VERIFICATION_FAILED(HttpStatus.UNAUTHORIZED, "검증 코드가 일치하지 않습니다!"),
 
   // firebase
-  FIREBASE_ENV_NOT_FOUND(HttpStatus.NOT_FOUND, "Firebase 환경변수를 찾을 수 없습니다.");
+  FIREBASE_ENV_NOT_FOUND(HttpStatus.NOT_FOUND, "Firebase 환경변수를 찾을 수 없습니다."),
+  FCM_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "fcm 토큰을 찾을 수 없습니다"),
+  FCM_SEND_FAILED(HttpStatus.BAD_REQUEST, "보낼 수 없습니다");
 
   private final HttpStatus status;
   private final String message;
