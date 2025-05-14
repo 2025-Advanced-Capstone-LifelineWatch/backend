@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public record LoginResponse(
     String name,
+    String token,
     LocalDate birthDate,
     String protectorName,
     String protectorContact,
