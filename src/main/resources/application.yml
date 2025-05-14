@@ -22,6 +22,13 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASS}
     url: ${DB_URL}
+    hikari:
+      maximum-pool-size: 10
+      max-lifetime: 280000     # 4분 40초 (MySQL wait_timeout보다 짧게)
+      idle-timeout: 60000      # 유휴 커넥션 1분 후 제거
+      connection-timeout: 30000 # 커넥션 요청 최대 대기 시간 30초
+      validation-timeout: 5000  # 커넥션 검증 타임아웃 5초
+
 
   # Jwt
   jwt:
