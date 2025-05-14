@@ -36,10 +36,6 @@ public class AuthService {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
     }
 
-    if (!authSmsService.verifyCode(request.phoneNumber(), request.verificationCode())) {
-      throw LifelineException.from(ErrorCode.SMS_VERIFICATION_FAILED);
-    }
-
     Long socialWorkerId;
     try {
       socialWorkerId = Long.valueOf(request.socialWorkerId()); // 명시적 변환
@@ -129,6 +125,7 @@ public class AuthService {
       SocialWorkerProfile worker = elderly.getSocialWorkerProfile();
 
       return new LoginResponse(
+          user.getName(),
           jwt,
           user.getBirthDate(),
           elderly.getProtectorName(),
@@ -141,7 +138,7 @@ public class AuthService {
 
     if (user.getRole() == User.Role.SOCIAL_WORKER && user.getSocialWorkerProfile() != null) {
       return new LoginResponse(
-          jwt, user.getBirthDate(), null, null, null, null, user.getId(), true);
+          user.getName(), jwt, user.getBirthDate(), null, null, null, null, user.getId(), true);
     }
 
     throw LifelineException.from(ErrorCode.INCORRECT_ACCOUNT);
