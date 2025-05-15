@@ -30,6 +30,7 @@ public class AuthSmsService {
         NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
   }
 
+  @Transactional
   public void sendAuthenticationCode(String phone) {
     String code = String.valueOf((int) ((Math.random() * 8999) + 1000));
 
@@ -42,6 +43,7 @@ public class AuthSmsService {
     smsVerificationRepository.save(new SmsVerification(phone, code));
   }
 
+  @Transactional
   public boolean verifyCode(String phoneNumber, String verificationCode) {
     return smsVerificationRepository
         .findTopByPhoneNumberOrderByCreatedAtDesc(phoneNumber)

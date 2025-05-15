@@ -2,6 +2,7 @@ package com.kgu.life_watch.domain.auth.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +32,7 @@ public class AuthService {
   private final AuthSmsService authSmsService;
   private final ChatRoomService chatRoomService;
 
+  @Transactional
   public void signUpElderly(ElderlySignUpRequest request, String fcmToken) {
     if (userRepository.existsByLoginId(request.loginId())) {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
@@ -79,6 +81,7 @@ public class AuthService {
     chatRoomService.createChatRoom(user, Long.valueOf(request.socialWorkerId()));
   }
 
+  @Transactional
   public void signUpSocialWorker(SocialWorkerSignUpRequest request, String fcmToken) {
     if (userRepository.existsByLoginId(request.loginId())) {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
@@ -104,6 +107,7 @@ public class AuthService {
   }
 
   // string 대신 dto 반환해부리기
+  @Transactional(readOnly = true)
   public LoginResponse login(LoginRequest request) {
     User user =
         userRepository
