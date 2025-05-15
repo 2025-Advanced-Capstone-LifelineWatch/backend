@@ -2,6 +2,7 @@ package com.kgu.life_watch.domain.auth.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -104,6 +105,7 @@ public class AuthService {
   }
 
   // string 대신 dto 반환해부리기
+  @Transactional(readOnly = true)
   public LoginResponse login(LoginRequest request) {
     User user =
         userRepository
