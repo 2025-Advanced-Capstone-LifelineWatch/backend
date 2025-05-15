@@ -2,6 +2,7 @@ package com.kgu.life_watch.domain.auth.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +19,7 @@ public class PasswordService {
   private final PasswordEncoder passwordEncoder;
   private final AuthSmsService authSmsService;
 
+  @Transactional
   public void changePassword(PasswordChangeRequest request) {
     User user =
         userRepository
@@ -31,6 +33,7 @@ public class PasswordService {
     user.changePassword(passwordEncoder.encode(request.newPassword()));
   }
 
+  @Transactional(readOnly = true)
   public String findLoginId(FindIdRequest request) {
     return userRepository
         .findByNameAndPhoneNumber(request.name(), request.phoneNumber())
@@ -38,6 +41,7 @@ public class PasswordService {
         .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
   }
 
+  @Transactional(readOnly = true)
   public void sendPasswordResetCode(FindPasswordRequest request) {
     userRepository
         .findByLoginIdAndPhoneNumber(request.loginId(), request.phoneNumber())
@@ -46,6 +50,7 @@ public class PasswordService {
     authSmsService.sendAuthenticationCode(request.phoneNumber());
   }
 
+  @Transactional
   public void resetPassword(ResetPasswordRequest request) {
     User user =
         userRepository

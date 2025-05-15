@@ -32,6 +32,7 @@ public class AuthService {
   private final AuthSmsService authSmsService;
   private final ChatRoomService chatRoomService;
 
+  @Transactional
   public void signUpElderly(ElderlySignUpRequest request, String fcmToken) {
     if (userRepository.existsByLoginId(request.loginId())) {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
@@ -80,6 +81,7 @@ public class AuthService {
     chatRoomService.createChatRoom(user, Long.valueOf(request.socialWorkerId()));
   }
 
+  @Transactional
   public void signUpSocialWorker(SocialWorkerSignUpRequest request, String fcmToken) {
     if (userRepository.existsByLoginId(request.loginId())) {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
