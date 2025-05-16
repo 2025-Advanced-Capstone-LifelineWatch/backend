@@ -2,6 +2,7 @@ package com.kgu.life_watch.domain.notification.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import com.kgu.life_watch.domain.notification.dto.MedicineAlarmRequest;
 import com.kgu.life_watch.domain.notification.service.MedicineAlarmService;
 import com.kgu.life_watch.global.domain.SuccessCode;
 import com.kgu.life_watch.global.dto.response.ApiResponse;
+import com.kgu.life_watch.global.security.CustomUserDetails;
 
 @RestController
 @RequestMapping("/api/alarm")
@@ -25,16 +27,19 @@ public class AlarmController {
   /** 알람 등록 */
   @PostMapping("/register")
   @Operation(summary = "복용 약 알람 등록 API", description = "복용하는 약 알람을 등록하는 API입니다.")
-  public ApiResponse<Void> registerAlarm(@RequestBody MedicineAlarmRequest request) {
-    medicineAlarmService.registerAlarm(request);
+  public ApiResponse<Void> registerAlarm(
+      @RequestBody MedicineAlarmRequest request,
+      @AuthenticationPrincipal CustomUserDetails userDetails) {
+    medicineAlarmService.registerAlarm(request, userDetails.user());
     return new ApiResponse<>(SuccessCode.REQUEST_OK);
   }
 
   /** 알람 목록 조회 */
-  @GetMapping("/list/{userId}")
+  @GetMapping("/list")
   @Operation(summary = "복용 약 알람 목록 조회 API", description = "복용하는 약 알람 목록을 조회하는 API입니다.")
-  public ApiResponse<MedicineAlarmDto> getAlarms(@PathVariable Long userId) {
-    List<MedicineAlarmDto> alarmDtos = medicineAlarmService.getAlarms(userId);
+  public ApiResponse<MedicineAlarmDto> getAlarms(
+      @AuthenticationPrincipal CustomUserDetails userDetails) {
+    List<MedicineAlarmDto> alarmDtos = medicineAlarmService.getAlarms(userDetails.user());
     return new ApiResponse<>(alarmDtos);
   }
 
