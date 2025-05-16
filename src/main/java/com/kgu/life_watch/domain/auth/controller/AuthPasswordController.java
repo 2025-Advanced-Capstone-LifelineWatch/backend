@@ -1,5 +1,6 @@
 package com.kgu.life_watch.domain.auth.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import com.kgu.life_watch.domain.auth.dto.*;
 import com.kgu.life_watch.domain.auth.service.PasswordService;
 import com.kgu.life_watch.global.domain.SuccessCode;
 import com.kgu.life_watch.global.dto.response.ApiResponse;
+import com.kgu.life_watch.global.security.CustomUserDetails;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,8 +24,10 @@ public class AuthPasswordController {
 
   @Operation(summary = "비밀번호 변경 API", description = "기존 비밀번호를 확인하고 새 비밀번호로 변경합니다.")
   @PatchMapping("/password/change")
-  public ApiResponse<Void> changePassword(@RequestBody @Valid PasswordChangeRequest request) {
-    passwordService.changePassword(request);
+  public ApiResponse<Void> changePassword(
+      @RequestBody @Valid PasswordChangeRequest request,
+      @AuthenticationPrincipal CustomUserDetails userDetails) {
+    passwordService.changePassword(request, userDetails.user());
     return new ApiResponse<>(SuccessCode.REQUEST_OK);
   }
 

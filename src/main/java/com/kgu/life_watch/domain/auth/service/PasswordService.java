@@ -20,11 +20,7 @@ public class PasswordService {
   private final AuthSmsService authSmsService;
 
   @Transactional
-  public void changePassword(PasswordChangeRequest request) {
-    User user =
-        userRepository
-            .findByLoginId(request.loginId())
-            .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
+  public void changePassword(PasswordChangeRequest request, User user) {
 
     if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
       throw LifelineException.from(ErrorCode.INCORRECT_PASSWORD);
