@@ -21,14 +21,38 @@ public class MedicineAlarmScheduler {
   private final MedicineAlarmRepository medicineAlarmRepository;
   private final FirebaseMessageService firebaseMessageService;
 
-  @Scheduled(cron = "0 * * * * *") // 매 분 0초마다 실행
-  // 실행될 때마다 현재 시각 (LocalTime.now()) 과 같은 시간에 설정된
-  // 복용 알람 데이터(MedicineAlarm 엔티티) 를 MedicineAlarmRepository에서 조회함.
-  public void sendMedicineAlarms() {
-    LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
-    List<MedicineAlarm> alarms = medicineAlarmRepository.findAlarmsByTime(now);
+  @Scheduled(cron = "0 * * * * *") // 매 분 실행
+  public void sendAndScheduleMedicineAlarms() {
+    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime nextMinute = now.plusMinutes(1);
+
+    LocalDateTime from = now.withSecond(0).withNano(0);
+    LocalDateTime to = nextMinute.withSecond(0).withNano(0);
+
+    List<MedicineAlarm> alarms = medicineAlarmRepository.findAlarmsByTimeBetween(from, to);
+
     for (MedicineAlarm alarm : alarms) {
       firebaseMessageService.sendMedicineAlarm(alarm);
+
+      switch (alarm.getRepeatCycle()) {
+        case DAILY -> createNextAlarm(alarm, alarm.getTime().plusDays(1));
+        case EVERY_OTHER_DAY -> createNextAlarm(alarm, alarm.getTime().plusDays(2));
+        case WEEKLY -> createNextAlarm(alarm, alarm.getTime().plusWeeks(1));
+        default -> {} // ONCE는 반복 없음
+      }
     }
+  }
+
+  private void createNextAlarm(MedicineAlarm current, LocalDateTime nextTime) {
+    MedicineAlarm nextAlarm =
+        MedicineAlarm.builder()
+            .user(current.getUser())
+            .medicineName(current.getMedicineName())
+            .medicineNote(current.getMedicineNote())
+            .time(nextTime)
+            .status(MedicineAlarm.AlarmStatus.SCHEDULED)
+            .repeatCycle(current.getRepeatCycle())
+            .build();
+    medicineAlarmRepository.save(nextAlarm);
   }
 }

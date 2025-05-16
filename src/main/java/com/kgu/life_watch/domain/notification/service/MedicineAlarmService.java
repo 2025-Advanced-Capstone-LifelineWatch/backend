@@ -1,5 +1,6 @@
 package com.kgu.life_watch.domain.notification.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,12 +29,15 @@ public class MedicineAlarmService {
   @Transactional
   public void registerAlarm(MedicineAlarmRequest request, User user) {
 
+    LocalDateTime normalizedTime = request.time().withSecond(0).withNano(0);
+
     MedicineAlarm alarm =
         MedicineAlarm.builder()
             .user(user)
             .medicineName(request.medicineName())
-            .time(request.time())
+            .time(normalizedTime)
             .medicineNote(request.medicineNote())
+            .repeatCycle(MedicineAlarm.RepeatCycle.valueOf(request.repeatCycle()))
             .status(AlarmStatus.SCHEDULED)
             .build();
 
