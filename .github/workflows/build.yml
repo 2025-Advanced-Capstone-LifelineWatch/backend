@@ -5,6 +5,9 @@ on:
     branches:
       - develop
 
+env:
+  IMAGE_NAME: hjh-test-registry.kr.ncr.ntruss.com/back-02
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,18 +31,18 @@ jobs:
       - name: Build without tests
         run: ./gradlew bootJar -x test
 
+      - name: Login to Container Registry
+        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login hjh-test-registry.kr.ncr.ntruss.com --username ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+
       - name: Build Docker image
         run: |
-          docker build -t hjh-test-registry.kr.ncr.ntruss.com/back-02:1.0 .
-          docker tag hjh-test-registry/back-02:1.0 hjh-test-registry/back-02:latest
-
-      - name: Login to Container Registry
-        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login hjh-test-registry --username ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+          docker build -t ${{ env.IMAGE_NAME }}:1.0 .
+          docker tag ${{ env.IMAGE_NAME }}:1.0 ${{ env.IMAGE_NAME }}:latest
 
       - name: Push Docker image
         run: |
-          docker push hjh-test-registry.kr.ncr.ntruss.com/back-02:1.0
-          docker push hjh-test-registry.kr.ncr.ntruss.com/back-02:latest
+          docker push ${{ env.IMAGE_NAME }}:1.0
+          docker push ${{ env.IMAGE_NAME }}:latest
 
       - name: Notify
-        run: echo "Build and Docker image creation completed."
+        run: echo "✅ Build and Docker image pushed successfully."
