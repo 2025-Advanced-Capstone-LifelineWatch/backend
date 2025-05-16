@@ -3,13 +3,22 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - develop
+      - develop   # 🟩 develop 브랜치로 직접 push될 때
+
+  pull_request:
+    types:
+      - closed    # 🟦 PR이 closed될 때 (즉, merge 포함)
+    branches:
+      - develop   # 대상 브랜치가 develop일 때만
 
 env:
   IMAGE_NAME: hjh-test-registry.kr.ncr.ntruss.com/back-02
+  IMAGE_TAG: latest
 
 jobs:
   build:
+    # PR이 그냥 닫힌 경우(false merge) 방지
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +40,7 @@ jobs:
       - name: Build without tests
         run: ./gradlew bootJar -x test
 
-      - name: Login to Container Registry
+      - name: Login to NCP Container Registry
         run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login hjh-test-registry.kr.ncr.ntruss.com --username ${{ secrets.REGISTRY_USERNAME }} --password-stdin
 
       - name: Build Docker image
