@@ -29,20 +29,35 @@ public class MedicineAlarm extends BaseEntity {
   @Column(name = "status")
   private AlarmStatus status;
 
-  public void updateStatus(AlarmStatus newStatus) {
-    this.status = newStatus;
-  }
-
   @Column(name = "medicine_note")
   private String medicineNote;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "repeat_cycle", nullable = false)
+  private RepeatCycle repeatCycle;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "alarm_group_id")
+  private AlarmGroup alarmGroup;
+
+  public void updateStatus(AlarmStatus newStatus) {
+    this.status = newStatus;
+  }
+
   public enum AlarmStatus {
     SCHEDULED,
     COMPLETE,
     MISSED
+  }
+
+  public enum RepeatCycle {
+    ONCE, // 한 번만
+    DAILY, // 매일
+    EVERY_OTHER_DAY, // 이틀에 한 번
+    WEEKLY // 일주일 간격
   }
 }
