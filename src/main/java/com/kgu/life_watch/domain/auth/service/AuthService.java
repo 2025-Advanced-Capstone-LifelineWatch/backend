@@ -143,4 +143,14 @@ public class AuthService {
 
     throw LifelineException.from(ErrorCode.INCORRECT_ACCOUNT);
   }
+
+  @Transactional
+  public void updateFcmToken(Long userId, String fcmToken) {
+    User user =
+        userRepository
+            .findById(userId)
+            .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
+
+    user.updateFcmToken(fcmToken);
+  }
 }
