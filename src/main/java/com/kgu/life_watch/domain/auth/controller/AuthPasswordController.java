@@ -33,9 +33,9 @@ public class AuthPasswordController {
 
   @Operation(summary = "아이디 찾기 API", description = "이름과 전화번호를 통해 로그인 ID(아이디)를 조회합니다.")
   @PostMapping("/find-id")
-  public ApiResponse<String> findLoginId(@RequestBody @Valid FindIdRequest request) {
+  public ApiResponse<FindLoginIdResponse> findLoginId(@RequestBody @Valid FindIdRequest request) {
     String loginId = passwordService.findLoginId(request);
-    return new ApiResponse<>(loginId);
+    return new ApiResponse<>(FindLoginIdResponse.builder().loginId(loginId).build());
   }
 
   @Operation(summary = "비밀번호 찾기 인증번호 전송 API", description = "로그인 ID와 전화번호를 통해 인증번호를 전송합니다.")
