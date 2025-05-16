@@ -26,11 +26,7 @@ public class MedicineAlarmService {
 
   // 약 알람 등록
   @Transactional
-  public void registerAlarm(MedicineAlarmRequest request) {
-    User user =
-        userRepository
-            .findById(request.userId())
-            .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
+  public void registerAlarm(MedicineAlarmRequest request, User user) {
 
     MedicineAlarm alarm =
         MedicineAlarm.builder()
@@ -57,8 +53,8 @@ public class MedicineAlarmService {
 
   // 약 알람 조회
   @Transactional(readOnly = true)
-  public List<MedicineAlarmDto> getAlarms(Long userId) {
-    List<MedicineAlarm> alarms = medicineAlarmRepository.findAllByUserId(userId);
+  public List<MedicineAlarmDto> getAlarms(User user) {
+    List<MedicineAlarm> alarms = medicineAlarmRepository.findAllByUserId(user.getId());
 
     return alarms.stream()
         .map(MedicineAlarmDto::fromEntity) // 엔티티 → DTO로 변환

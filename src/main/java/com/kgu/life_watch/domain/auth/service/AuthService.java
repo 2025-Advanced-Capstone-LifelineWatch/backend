@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import com.kgu.life_watch.domain.auth.dto.ElderlySignUpRequest;
-import com.kgu.life_watch.domain.auth.dto.LoginRequest;
-import com.kgu.life_watch.domain.auth.dto.LoginResponse;
-import com.kgu.life_watch.domain.auth.dto.SocialWorkerSignUpRequest;
+import com.kgu.life_watch.domain.auth.dto.request.ElderlySignUpRequest;
+import com.kgu.life_watch.domain.auth.dto.request.LoginRequest;
+import com.kgu.life_watch.domain.auth.dto.request.SocialWorkerSignUpRequest;
+import com.kgu.life_watch.domain.auth.dto.response.LoginResponse;
 import com.kgu.life_watch.domain.chat.service.ChatRoomService;
 import com.kgu.life_watch.domain.user.entity.ElderlyProfile;
 import com.kgu.life_watch.domain.user.entity.SocialWorkerProfile;

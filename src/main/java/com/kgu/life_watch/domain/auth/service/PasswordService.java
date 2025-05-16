@@ -6,7 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import com.kgu.life_watch.domain.auth.dto.*;
+import com.kgu.life_watch.domain.auth.dto.request.FindIdRequest;
+import com.kgu.life_watch.domain.auth.dto.request.FindPasswordRequest;
+import com.kgu.life_watch.domain.auth.dto.request.PasswordChangeRequest;
+import com.kgu.life_watch.domain.auth.dto.request.ResetPasswordRequest;
 import com.kgu.life_watch.domain.user.entity.User;
 import com.kgu.life_watch.domain.user.repository.UserRepository;
 import com.kgu.life_watch.global.exception.ErrorCode;
@@ -20,11 +23,7 @@ public class PasswordService {
   private final AuthSmsService authSmsService;
 
   @Transactional
-  public void changePassword(PasswordChangeRequest request) {
-    User user =
-        userRepository
-            .findByLoginId(request.loginId())
-            .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
+  public void changePassword(PasswordChangeRequest request, User user) {
 
     if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
       throw LifelineException.from(ErrorCode.INCORRECT_PASSWORD);
