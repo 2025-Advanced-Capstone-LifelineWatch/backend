@@ -1,5 +1,6 @@
 package com.kgu.life_watch.domain.auth.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -7,10 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import com.kgu.life_watch.domain.auth.dto.ElderlySignUpRequest;
-import com.kgu.life_watch.domain.auth.dto.LoginRequest;
-import com.kgu.life_watch.domain.auth.dto.LoginResponse;
-import com.kgu.life_watch.domain.auth.dto.SocialWorkerSignUpRequest;
+import com.kgu.life_watch.domain.auth.dto.*;
 import com.kgu.life_watch.domain.auth.service.AuthService;
 import com.kgu.life_watch.global.domain.SuccessCode;
 import com.kgu.life_watch.global.dto.response.ApiResponse;
@@ -46,5 +44,13 @@ public class AuthController {
   public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
     LoginResponse response = authService.login(request);
     return new ApiResponse<>(response);
+  }
+
+  @PatchMapping("/fcm-token")
+  @Operation(summary = "FCM 토큰 갱신 API", description = "사용자의 FCM 토큰을 최신값으로 갱신합니다.")
+  public ApiResponse<Void> updateFcmToken(
+      @AuthenticationPrincipal Long userId, @Valid @RequestBody FcmTokenUpdateRequest request) {
+    authService.updateFcmToken(userId, request.fcmToken());
+    return new ApiResponse<>(SuccessCode.REQUEST_OK);
   }
 }
