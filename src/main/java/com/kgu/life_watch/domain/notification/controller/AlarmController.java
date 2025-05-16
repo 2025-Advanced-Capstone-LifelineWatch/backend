@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import com.kgu.life_watch.domain.notification.dto.MedicineAlarmDto;
@@ -28,7 +29,7 @@ public class AlarmController {
   @PostMapping("/register")
   @Operation(summary = "복용 약 알람 등록 API", description = "복용하는 약 알람을 등록하는 API입니다.")
   public ApiResponse<Void> registerAlarm(
-      @RequestBody MedicineAlarmRequest request,
+      @RequestBody @Valid MedicineAlarmRequest request,
       @AuthenticationPrincipal CustomUserDetails userDetails) {
     medicineAlarmService.registerAlarm(request, userDetails.user());
     return new ApiResponse<>(SuccessCode.REQUEST_OK);
