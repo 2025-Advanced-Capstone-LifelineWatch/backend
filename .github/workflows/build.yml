@@ -38,8 +38,8 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push hjh-test-registry/back-02:1.0
-          docker push hjh-test-registry/back-02:latest
+          docker push hjh-test-registry.kr.ncr.ntruss.com/back-02:1.0
+          docker push hjh-test-registry.kr.ncr.ntruss.com/back-02:latest
 
       - name: Notify
         run: echo "Build and Docker image creation completed."
