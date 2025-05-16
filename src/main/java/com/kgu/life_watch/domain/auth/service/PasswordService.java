@@ -6,7 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import com.kgu.life_watch.domain.auth.dto.*;
+import com.kgu.life_watch.domain.auth.dto.request.FindIdRequest;
+import com.kgu.life_watch.domain.auth.dto.request.FindPasswordRequest;
+import com.kgu.life_watch.domain.auth.dto.request.PasswordChangeRequest;
+import com.kgu.life_watch.domain.auth.dto.request.ResetPasswordRequest;
 import com.kgu.life_watch.domain.user.entity.User;
 import com.kgu.life_watch.domain.user.repository.UserRepository;
 import com.kgu.life_watch.global.exception.ErrorCode;

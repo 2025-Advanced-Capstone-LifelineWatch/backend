@@ -8,7 +8,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import com.kgu.life_watch.domain.auth.dto.*;
+import com.kgu.life_watch.domain.auth.dto.request.FindIdRequest;
+import com.kgu.life_watch.domain.auth.dto.request.FindPasswordRequest;
+import com.kgu.life_watch.domain.auth.dto.request.PasswordChangeRequest;
+import com.kgu.life_watch.domain.auth.dto.request.ResetPasswordRequest;
+import com.kgu.life_watch.domain.auth.dto.response.FindLoginIdResponse;
 import com.kgu.life_watch.domain.auth.service.PasswordService;
 import com.kgu.life_watch.global.domain.SuccessCode;
 import com.kgu.life_watch.global.dto.response.ApiResponse;
