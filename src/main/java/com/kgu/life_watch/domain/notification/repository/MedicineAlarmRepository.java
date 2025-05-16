@@ -18,4 +18,6 @@ public interface MedicineAlarmRepository extends JpaRepository<MedicineAlarm, Lo
 
   @Query("SELECT m FROM MedicineAlarm m WHERE m.user.id = :userId")
   List<MedicineAlarm> findAllByUserId(Long userId);
+
+  List<MedicineAlarm> findAllByAlarmGroupId(Long alarmGroupId);
 }

@@ -1,6 +1,7 @@
 package com.kgu.life_watch.domain.notification.service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 
 import com.kgu.life_watch.domain.notification.dto.MedicineAlarmDto;
 import com.kgu.life_watch.domain.notification.dto.MedicineAlarmRequest;
+import com.kgu.life_watch.domain.notification.entity.AlarmGroup;
 import com.kgu.life_watch.domain.notification.entity.MedicineAlarm;
 import com.kgu.life_watch.domain.notification.entity.MedicineAlarm.AlarmStatus;
+import com.kgu.life_watch.domain.notification.repository.AlarmGroupRepository;
 import com.kgu.life_watch.domain.notification.repository.MedicineAlarmRepository;
 import com.kgu.life_watch.domain.user.entity.User;
 import com.kgu.life_watch.domain.user.repository.UserRepository;
@@ -24,24 +27,46 @@ import com.kgu.life_watch.global.exception.LifelineException;
 public class MedicineAlarmService {
   private final MedicineAlarmRepository medicineAlarmRepository;
   private final UserRepository userRepository;
+  private final AlarmGroupRepository alarmGroupRepository;
 
   // 약 알람 등록
   @Transactional
   public void registerAlarm(MedicineAlarmRequest request, User user) {
-
-    LocalDateTime normalizedTime = request.time().withSecond(0).withNano(0);
-
-    MedicineAlarm alarm =
-        MedicineAlarm.builder()
+    AlarmGroup alarmGroup =
+        AlarmGroup.builder()
             .user(user)
             .medicineName(request.medicineName())
-            .time(normalizedTime)
             .medicineNote(request.medicineNote())
             .repeatCycle(MedicineAlarm.RepeatCycle.valueOf(request.repeatCycle()))
-            .status(AlarmStatus.SCHEDULED)
             .build();
+    alarmGroupRepository.save(alarmGroup);
 
-    medicineAlarmRepository.save(alarm);
+    for (String timeStr : request.times()) {
+      LocalTime time = LocalTime.parse(timeStr);
+      LocalDateTime alarmTime =
+          LocalDateTime.now()
+              .withHour(time.getHour())
+              .withMinute(time.getMinute())
+              .withSecond(0)
+              .withNano(0);
+
+      if (alarmTime.isBefore(LocalDateTime.now())) {
+        alarmTime = alarmTime.plusDays(1);
+      }
+
+      MedicineAlarm alarm =
+          MedicineAlarm.builder()
+              .user(user)
+              .medicineName(request.medicineName())
+              .medicineNote(request.medicineNote())
+              .repeatCycle(MedicineAlarm.RepeatCycle.valueOf(request.repeatCycle()))
+              .time(alarmTime)
+              .status(MedicineAlarm.AlarmStatus.SCHEDULED)
+              .alarmGroup(alarmGroup)
+              .build();
+
+      medicineAlarmRepository.save(alarm);
+    }
   }
 
   // 약 알람 삭제
