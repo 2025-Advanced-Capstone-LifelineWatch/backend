@@ -54,17 +54,17 @@ public class FirebaseMessageService {
       throw LifelineException.from(ErrorCode.FCM_TOKEN_NOT_FOUND);
     }
 
+    // 띄어쓰기로 가독성 향상
     Message message =
         Message.builder()
             .putData("title", "약 복용 알림")
             .putData(
                 "body",
-                alarm.getMedicineName()
-                    + " 복용 시간: "
+                "약 이름: "
+                    + alarm.getMedicineName()
+                    + "\n복용 시간: "
                     + alarm.getTime().toString()
-                    + (alarm.getMedicineNote() != null
-                        ? " | 주의사항: " + alarm.getMedicineNote()
-                        : ""))
+                    + (alarm.getMedicineNote() != null ? "\n주의사항: " + alarm.getMedicineNote() : ""))
             .setToken(fcmToken)
             .build();
 
