@@ -1,0 +1,45 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Clean build
+        run: ./gradlew clean
+
+      - name: Build without tests
+        run: ./gradlew bootJar -x test
+
+      - name: Build Docker image
+        run: |
+          docker build -t hjh-test-registry.kr.ncr.ntruss.com/back-02:1.0 .
+          docker tag hjh-test-registry/back-02:1.0 hjh-test-registry/back-02:latest
+
+      - name: Login to Container Registry
+        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login hjh-test-registry --username ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+
+      - name: Push Docker image
+        run: |
+          docker push hjh-test-registry/back-02:1.0
+          docker push hjh-test-registry/back-02:latest
+
+      - name: Notify
+        run: echo "Build and Docker image creation completed."
