@@ -27,19 +27,16 @@ public class AuthController {
 
   @PostMapping("/signup")
   @Operation(summary = "노인 회원가입 API", description = "노인 회원가입 API입니다.")
-  public ApiResponse<Void> signUp(
-      @Valid @RequestBody ElderlySignUpRequest request,
-      @RequestHeader(value = "fcm_token", required = false) String fcmToken) {
-    authService.signUpElderly(request, fcmToken);
+  public ApiResponse<Void> signUp(@Valid @RequestBody ElderlySignUpRequest request) {
+    authService.signUpElderly(request);
     return new ApiResponse<>(SuccessCode.REQUEST_OK);
   }
 
   @PostMapping("/signup/social-worker")
   @Operation(summary = "사회복지사 회원가입 API", description = "사회복지사 회원가입 API입니다.")
   public ApiResponse<Void> signUpSocialWorker(
-      @Valid @RequestBody SocialWorkerSignUpRequest request,
-      @RequestHeader(value = "fcm_token", required = false) String fcmToken) {
-    authService.signUpSocialWorker(request, fcmToken);
+      @Valid @RequestBody SocialWorkerSignUpRequest request) {
+    authService.signUpSocialWorker(request);
     return new ApiResponse<>(SuccessCode.REQUEST_OK);
   }
 
