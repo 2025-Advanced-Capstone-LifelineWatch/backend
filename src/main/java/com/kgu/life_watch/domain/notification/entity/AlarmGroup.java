@@ -34,8 +34,14 @@ public class AlarmGroup extends BaseEntity {
   @OneToMany(mappedBy = "alarmGroup", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<MedicineAlarm> alarms = new ArrayList<>();
 
+  // 내용 업데이트
   public void updateInfo(String name, String note) {
     this.medicineName = name;
     this.medicineNote = note;
+  }
+
+  // 복용 주기 업데이트
+  public void updateRepeatCycle(MedicineAlarm.RepeatCycle cycle) {
+    this.repeatCycle = cycle;
   }
 }
