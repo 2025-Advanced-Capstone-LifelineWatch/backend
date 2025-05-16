@@ -20,4 +20,6 @@ public record SocialWorkerSignUpRequest(
     @NotNull(message = "생년월일은 필수입니다.") @JsonFormat(pattern = "yyyy/MM/dd") LocalDate birthDate,
     @NotBlank(message = "성별은 필수입니다.")
         @Pattern(regexp = "^(남|여)$", message = "성별은 '남' 또는 '여'로 입력해주세요.")
-        String gender) {}
+        String gender,
+    @NotBlank(message = "FCM 토큰은 필수입니다.") String fcmToken // 프론트에서 자동으로 넣어줘야하는 값
+    ) {}

@@ -33,7 +33,7 @@ public class AuthService {
   private final ChatRoomService chatRoomService;
 
   @Transactional
-  public void signUpElderly(ElderlySignUpRequest request, String fcmToken) {
+  public void signUpElderly(ElderlySignUpRequest request) {
     if (userRepository.existsByLoginId(request.loginId())) {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
     }
@@ -56,8 +56,8 @@ public class AuthService {
             .rrn(request.rrn())
             .birthDate(request.birthDate())
             .gender(request.gender())
-            .fcmToken(fcmToken)
             .role(User.Role.USER)
+            .fcmToken(request.fcmToken())
             .build();
 
     SocialWorkerProfile socialWorkerProfile =
@@ -82,7 +82,7 @@ public class AuthService {
   }
 
   @Transactional
-  public void signUpSocialWorker(SocialWorkerSignUpRequest request, String fcmToken) {
+  public void signUpSocialWorker(SocialWorkerSignUpRequest request) {
     if (userRepository.existsByLoginId(request.loginId())) {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
     }
@@ -98,8 +98,8 @@ public class AuthService {
             .rrn(request.rrn())
             .birthDate(request.birthDate())
             .gender(request.gender())
-            .fcmToken(fcmToken)
             .role(User.Role.SOCIAL_WORKER)
+            .fcmToken(request.fcmToken())
             .build();
 
     SocialWorkerProfile profile = SocialWorkerProfile.builder().user(user).build();
