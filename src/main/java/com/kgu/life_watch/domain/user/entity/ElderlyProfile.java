@@ -39,4 +39,10 @@ public class ElderlyProfile {
   public void setSocialWorkerProfile(SocialWorkerProfile profile) {
     this.socialWorkerProfile = profile;
   }
+
+  // 노인용 추가 정보 수정 메서드
+  public void updateProtector(String protectorName, String protectorContact) {
+    this.protectorName = protectorName;
+    this.protectorContact = protectorContact;
+  }
 }
