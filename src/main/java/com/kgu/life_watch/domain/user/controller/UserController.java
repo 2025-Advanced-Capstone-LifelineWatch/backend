@@ -67,8 +67,9 @@ public class UserController {
   @PatchMapping("/me")
   @Operation(summary = "회원정보 수정 API", description = "이름, 주소, 전화번호, (노인의 경우 보호자 정보)를 수정합니다.")
   public ApiResponse<Void> updateUserInfo(
-      @AuthenticationPrincipal Long userId, @RequestBody @Valid UserUpdateRequest request) {
-    userService.updateUserInfo(userId, request);
+      @AuthenticationPrincipal CustomUserDetails userDetails,
+      @RequestBody @Valid UserUpdateRequest request) {
+    userService.updateUserInfo(userDetails.user().getId(), request);
     return new ApiResponse<>(SuccessCode.REQUEST_OK);
   }
 }
