@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import com.kgu.life_watch.domain.auth.dto.request.UserUpdateRequest;
 import com.kgu.life_watch.domain.chat.service.ChatRoomService;
 import com.kgu.life_watch.domain.user.dto.UserProfileResponse;
 import com.kgu.life_watch.domain.user.entity.ElderlyProfile;
@@ -12,6 +13,7 @@ import com.kgu.life_watch.domain.user.entity.SocialWorkerProfile;
 import com.kgu.life_watch.domain.user.entity.User;
 import com.kgu.life_watch.domain.user.repository.ElderlyProfileRepository;
 import com.kgu.life_watch.domain.user.repository.SocialWorkerProfileRepository;
+import com.kgu.life_watch.domain.user.repository.UserRepository;
 import com.kgu.life_watch.global.exception.ErrorCode;
 import com.kgu.life_watch.global.exception.LifelineException;
 
@@ -21,6 +23,7 @@ public class UserService {
   private final ElderlyProfileRepository elderlyProfileRepository;
   private final SocialWorkerProfileRepository socialWorkerProfileRepository;
   private final ChatRoomService chatRoomService;
+  private final UserRepository userRepository;
 
   @Transactional
   public void assignElderly(Long elderlyId, Long socialWorkerId) {
@@ -59,5 +62,20 @@ public class UserService {
   @Transactional(readOnly = true)
   public UserProfileResponse getProfile(User user) {
     return UserProfileResponse.toDto(user);
+  }
+
+  @Transactional
+  public void updateUserInfo(Long userId, UserUpdateRequest request) {
+    User user =
+        userRepository
+            .findById(userId)
+            .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
+
+    user.updateBasicInfo(request.name(), request.phoneNumber(), request.address());
+
+    if (user.getRole() == User.Role.USER && user.getElderlyProfile() != null) {
+      ElderlyProfile profile = user.getElderlyProfile();
+      profile.updateProtector(request.protectorName(), request.protectorContact());
+    }
   }
 }
