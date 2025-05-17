@@ -64,7 +64,7 @@ public enum ErrorCode {
   PROFILE_IMAGE_REQUIRED(HttpStatus.BAD_REQUEST, "프로필 이미지 선택은 필수입니다."),
 
   // alarm
-  ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰을 찾을 수 없습니다."),
+  ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "약 알람 그룹을 찾을 수 없습니다."),
 
   // sns
   SMS_VERIFICATION_FAILED(HttpStatus.UNAUTHORIZED, "검증 코드가 일치하지 않습니다!"),
