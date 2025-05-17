@@ -40,7 +40,7 @@ public class PasswordService {
         .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
   }
 
-  @Transactional(readOnly = true)
+  @Transactional
   public void sendPasswordResetCode(FindPasswordRequest request) {
     userRepository
         .findByLoginIdAndPhoneNumber(request.loginId(), request.phoneNumber())
