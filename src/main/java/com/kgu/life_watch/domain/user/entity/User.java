@@ -83,4 +83,11 @@ public class User extends BaseEntity {
   public void updateFcmToken(String token) {
     this.fcmToken = token;
   }
+
+  // 유저 정보 수정 메서드
+  public void updateBasicInfo(String name, String phoneNumber, String address) {
+    this.name = name;
+    this.phoneNumber = phoneNumber;
+    this.address = address;
+  }
 }

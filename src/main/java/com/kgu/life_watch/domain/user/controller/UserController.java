@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import com.kgu.life_watch.domain.auth.dto.request.UserUpdateRequest;
 import com.kgu.life_watch.domain.user.dto.ElderlyAssignmentRequest;
 import com.kgu.life_watch.domain.user.dto.UserProfileResponse;
 import com.kgu.life_watch.domain.user.entity.User;
@@ -60,6 +61,14 @@ public class UserController {
   @Operation(summary = "노인 할당 해제 API", description = "담당 노인 할당을 해제 API입니다.")
   public ApiResponse<Void> unassignElderly(@RequestBody @Valid ElderlyAssignmentRequest request) {
     userService.unassignElderly(request.elderlyId(), request.socialWorkerId());
+    return new ApiResponse<>(SuccessCode.REQUEST_OK);
+  }
+
+  @PatchMapping("/me")
+  @Operation(summary = "회원정보 수정 API", description = "이름, 주소, 전화번호, (노인의 경우 보호자 정보)를 수정합니다.")
+  public ApiResponse<Void> updateUserInfo(
+      @AuthenticationPrincipal Long userId, @RequestBody @Valid UserUpdateRequest request) {
+    userService.updateUserInfo(userId, request);
     return new ApiResponse<>(SuccessCode.REQUEST_OK);
   }
 }
