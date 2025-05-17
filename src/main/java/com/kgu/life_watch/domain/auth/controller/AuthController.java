@@ -16,6 +16,7 @@ import com.kgu.life_watch.domain.auth.dto.response.LoginResponse;
 import com.kgu.life_watch.domain.auth.service.AuthService;
 import com.kgu.life_watch.global.domain.SuccessCode;
 import com.kgu.life_watch.global.dto.response.ApiResponse;
+import com.kgu.life_watch.global.security.CustomUserDetails;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,8 +51,9 @@ public class AuthController {
   @PatchMapping("/fcm-token")
   @Operation(summary = "FCM 토큰 갱신 API", description = "사용자의 FCM 토큰을 최신값으로 갱신합니다.")
   public ApiResponse<Void> updateFcmToken(
-      @AuthenticationPrincipal Long userId, @Valid @RequestBody FcmTokenUpdateRequest request) {
-    authService.updateFcmToken(userId, request.fcmToken());
+      @AuthenticationPrincipal CustomUserDetails userDetails,
+      @Valid @RequestBody FcmTokenUpdateRequest request) {
+    authService.updateFcmToken(userDetails.user().getId(), request.fcmToken());
     return new ApiResponse<>(SuccessCode.REQUEST_OK);
   }
 }
