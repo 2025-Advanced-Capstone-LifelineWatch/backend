@@ -42,7 +42,11 @@ public class ElderlyProfile {
 
   // 노인용 추가 정보 수정 메서드
   public void updateProtector(String protectorName, String protectorContact) {
-    this.protectorName = protectorName;
-    this.protectorContact = protectorContact;
+    if (protectorName != null) {
+      this.protectorName = protectorName;
+    }
+    if (protectorContact != null) {
+      this.protectorContact = protectorContact;
+    }
   }
 }
