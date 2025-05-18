@@ -9,8 +9,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import com.kgu.life_watch.domain.auth.dto.request.UserUpdateRequest;
-import com.kgu.life_watch.domain.user.dto.ElderlyAssignmentRequest;
-import com.kgu.life_watch.domain.user.dto.UserProfileResponse;
+import com.kgu.life_watch.domain.user.dto.request.ElderlyAssignmentRequest;
+import com.kgu.life_watch.domain.user.dto.response.ElderlySimpleInfoResponse;
+import com.kgu.life_watch.domain.user.dto.response.UserProfileResponse;
 import com.kgu.life_watch.domain.user.entity.User;
 import com.kgu.life_watch.domain.user.service.UserService;
 import com.kgu.life_watch.global.domain.SuccessCode;
@@ -71,5 +72,18 @@ public class UserController {
       @RequestBody @Valid UserUpdateRequest request) {
     userService.updateUserInfo(userDetails.user().getId(), request);
     return new ApiResponse<>(SuccessCode.REQUEST_OK);
+  }
+
+  @GetMapping("/elderly/assignable")
+  @Operation(summary = "할당 가능한 노인 목록 조회", description = "아직 어떤 사회복지사와도 연결되지 않은 노인 목록 조회")
+  public ApiResponse<ElderlySimpleInfoResponse> getAssignableElderlyList() {
+    return new ApiResponse<>(userService.getAssignableElderlyList());
+  }
+
+  @GetMapping("/elderly/assigned")
+  @Operation(summary = "내가 담당 중인 노인 목록 조회", description = "로그인한 사회복지사가 담당 중인 노인 목록 조회")
+  public ApiResponse<ElderlySimpleInfoResponse> getAssignedElderlyList(
+      @AuthenticationPrincipal CustomUserDetails userDetails) {
+    return new ApiResponse<>(userService.getAssignedElderlyList(userDetails.user()));
   }
 }
