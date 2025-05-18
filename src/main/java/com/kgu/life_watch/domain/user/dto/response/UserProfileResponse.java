@@ -1,4 +1,4 @@
-package com.kgu.life_watch.domain.user.dto;
+package com.kgu.life_watch.domain.user.dto.response;
 
 import java.time.LocalDate;
 

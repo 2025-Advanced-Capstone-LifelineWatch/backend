@@ -1,5 +1,6 @@
 package com.kgu.life_watch.domain.user.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -12,4 +13,8 @@ public interface ElderlyProfileRepository extends JpaRepository<ElderlyProfile, 
   // JPA가 쿼리를 생성할 때 연관된 엔티티까지 조인해서 한 번에 로딩 -> 이거 안하면 알람 보낼 때 트랜잭션 범위를 벗어난 시점에서 Lazy 로딩을 시도함 정신 나갈뻔
   @EntityGraph(attributePaths = "socialWorkerProfile")
   Optional<ElderlyProfile> findWithSocialWorkerProfileById(Long id);
+
+  List<ElderlyProfile> findAllBySocialWorkerProfileIsNull();
+
+  List<ElderlyProfile> findAllBySocialWorkerProfileId(Long socialWorkerProfileId);
 }
