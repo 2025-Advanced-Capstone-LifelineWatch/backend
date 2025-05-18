@@ -1,5 +1,7 @@
 package com.kgu.life_watch.domain.user.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 
 import com.kgu.life_watch.domain.auth.dto.request.UserUpdateRequest;
 import com.kgu.life_watch.domain.chat.service.ChatRoomService;
-import com.kgu.life_watch.domain.user.dto.UserProfileResponse;
+import com.kgu.life_watch.domain.user.dto.response.ElderlySimpleInfoResponse;
+import com.kgu.life_watch.domain.user.dto.response.UserProfileResponse;
 import com.kgu.life_watch.domain.user.entity.ElderlyProfile;
 import com.kgu.life_watch.domain.user.entity.SocialWorkerProfile;
 import com.kgu.life_watch.domain.user.entity.User;
@@ -77,5 +80,20 @@ public class UserService {
       ElderlyProfile profile = user.getElderlyProfile();
       profile.updateProtector(request.protectorName(), request.protectorContact());
     }
+  }
+
+  @Transactional(readOnly = true)
+  public List<ElderlySimpleInfoResponse> getAssignableElderlyList() {
+    return elderlyProfileRepository.findAllBySocialWorkerProfileIsNull().stream()
+        .map(profile -> ElderlySimpleInfoResponse.from(profile.getUser()))
+        .toList();
+  }
+
+  @Transactional(readOnly = true)
+  public List<ElderlySimpleInfoResponse> getAssignedElderlyList(User socialWorkerUser) {
+    Long socialWorkerProfileId = socialWorkerUser.getSocialWorkerProfile().getId();
+    return elderlyProfileRepository.findAllBySocialWorkerProfileId(socialWorkerProfileId).stream()
+        .map(profile -> ElderlySimpleInfoResponse.from(profile.getUser()))
+        .toList();
   }
 }
