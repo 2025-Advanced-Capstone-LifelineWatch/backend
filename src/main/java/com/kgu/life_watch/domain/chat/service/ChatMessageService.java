@@ -60,8 +60,10 @@ public class ChatMessageService {
             .findById(roomId)
             .orElseThrow(() -> LifelineException.from(ErrorCode.CHAT_ROOM_NOT_FOUND));
     List<User> users = chatParticipationRepository.findUsersByChatRoom(chatRoom);
-    for (User findUser : users) {
-      if (user.getLoginId().equals(findUser.getLoginId())) break;
+    boolean isParticipant =
+        users.stream().anyMatch(findUser -> user.getId().equals(findUser.getId()));
+
+    if (!isParticipant) {
       throw LifelineException.from(ErrorCode.CHAT_ROOM_NOT_OWNER);
     }
 
