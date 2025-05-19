@@ -20,7 +20,7 @@ public class SocialWorkerProfile {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @OneToMany(mappedBy = "socialWorkerProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "socialWorkerProfile", cascade = CascadeType.ALL)
   private List<ElderlyProfile> assignedSeniors = new ArrayList<>();
 
   public void setUser(User user) {
