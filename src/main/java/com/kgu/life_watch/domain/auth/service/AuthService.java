@@ -38,13 +38,6 @@ public class AuthService {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
     }
 
-    Long socialWorkerId;
-    try {
-      socialWorkerId = Long.valueOf(request.socialWorkerId()); // 명시적 변환
-    } catch (NumberFormatException e) {
-      throw LifelineException.from(ErrorCode.INVALID_REQUEST);
-    }
-
     User user =
         User.builder()
             .name(request.name())
@@ -60,25 +53,38 @@ public class AuthService {
             .fcmToken(request.fcmToken())
             .build();
 
-    SocialWorkerProfile socialWorkerProfile =
-        socialWorkerProfileRepository
-            .findById(socialWorkerId)
-            .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
-
-    ElderlyProfile elderlyProfile =
+    ElderlyProfile.ElderlyProfileBuilder profileBuilder =
         ElderlyProfile.builder()
             .user(user)
             .drn(request.drn())
             .protectorContact(request.protectorContact())
-            .protectorName(request.protectorName())
-            .socialWorkerProfile(socialWorkerProfile)
-            .build();
+            .protectorName(request.protectorName());
 
-    elderlyProfileRepository.save(elderlyProfile);
+    // socialWorkerId가 존재하고 유효한 경우만 할당
+    if (request.socialWorkerId() != null && !request.socialWorkerId().isBlank()) {
+      Long socialWorkerId;
+      try {
+        socialWorkerId = Long.valueOf(request.socialWorkerId());
+      } catch (NumberFormatException e) {
+        throw LifelineException.from(ErrorCode.INVALID_REQUEST);
+      }
+
+      SocialWorkerProfile socialWorkerProfile =
+          socialWorkerProfileRepository
+              .findById(socialWorkerId)
+              .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
+
+      profileBuilder.socialWorkerProfile(socialWorkerProfile);
+    }
+
+    ElderlyProfile profile = profileBuilder.build();
+    elderlyProfileRepository.save(profile);
     elderlyProfileRepository.flush();
 
-    // 담당 사회복지사와 채팅방 생성
-    chatRoomService.createChatRoom(user, Long.valueOf(request.socialWorkerId()));
+    // 채팅방은 할당된 경우에만 생성
+    if (profile.getSocialWorkerProfile() != null) {
+      chatRoomService.createChatRoom(user, profile.getSocialWorkerProfile().getId());
+    }
   }
 
   @Transactional
