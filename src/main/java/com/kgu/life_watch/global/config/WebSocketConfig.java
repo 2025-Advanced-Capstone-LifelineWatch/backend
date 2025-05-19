@@ -42,7 +42,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
 
-    registry.addEndpoint("/chat").setAllowedOriginPatterns("*"); // 추후 배포시 수정 필요
+    registry
+        .addEndpoint("/chat")
+        .setAllowedOriginPatterns(
+            "https://server.lifewatch.store", "http://localhost:3000", "http://localhost:8080")
+        .withSockJS(); // 추후 배포시 수정 필요
   }
 
   @Override
