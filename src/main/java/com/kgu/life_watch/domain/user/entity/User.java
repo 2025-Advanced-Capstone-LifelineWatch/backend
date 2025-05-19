@@ -53,10 +53,10 @@ public class User extends BaseEntity {
   @Column(name = "fcm_token")
   private String fcmToken;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   private ElderlyProfile elderlyProfile;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   private SocialWorkerProfile socialWorkerProfile;
 
   public enum Role {
