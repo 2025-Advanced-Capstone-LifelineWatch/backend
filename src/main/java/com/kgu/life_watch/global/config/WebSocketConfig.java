@@ -45,7 +45,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     registry
         .addEndpoint("/chat")
         .setAllowedOriginPatterns(
-            "https://server.lifewatch.store", "http://localhost:3000", "http://localhost:8080")
+            "https://server.lifewatch.store",
+            "https://jiangxy.github.io",
+            "http://localhost:3000",
+            "http://localhost:8080")
         .withSockJS(); // 추후 배포시 수정 필요
   }
 
