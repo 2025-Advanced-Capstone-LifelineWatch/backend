@@ -130,14 +130,23 @@ public class AuthService {
       ElderlyProfile elderly = user.getElderlyProfile();
       SocialWorkerProfile worker = elderly.getSocialWorkerProfile();
 
+      // NullPointerException 방지
+      String socialWorkerName = null;
+      String socialWorkerPhone = null;
+
+      if (worker != null && worker.getUser() != null) {
+        socialWorkerName = worker.getUser().getName();
+        socialWorkerPhone = worker.getUser().getPhoneNumber();
+      }
+
       return new LoginResponse(
           user.getName(),
           jwt,
           user.getBirthDate(),
           elderly.getProtectorName(),
           elderly.getProtectorContact(),
-          worker.getUser().getName(),
-          worker.getUser().getPhoneNumber(),
+          socialWorkerName,
+          socialWorkerPhone,
           user.getId(),
           false);
     }
