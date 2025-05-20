@@ -25,7 +25,7 @@ public class FirebaseMessageService {
   public void sendEmergencyAlert(Long elderlyId, String label, String explanation) {
     ElderlyProfile elderly =
         elderlyProfileRepository
-            .findWithSocialWorkerProfileById(elderlyId)
+            .findWithSocialWorkerProfileByUserId(elderlyId)
             .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
 
     SocialWorkerProfile socialWorker = elderly.getSocialWorkerProfile();

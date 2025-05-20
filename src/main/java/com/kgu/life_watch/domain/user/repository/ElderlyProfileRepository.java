@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.kgu.life_watch.domain.user.entity.ElderlyProfile;
 
@@ -17,4 +18,13 @@ public interface ElderlyProfileRepository extends JpaRepository<ElderlyProfile, 
   List<ElderlyProfile> findAllBySocialWorkerProfileIsNull();
 
   List<ElderlyProfile> findAllBySocialWorkerProfileId(Long socialWorkerProfileId);
+
+  @Query(
+      """
+  SELECT e FROM ElderlyProfile e
+  JOIN FETCH e.socialWorkerProfile sw
+  JOIN FETCH sw.user u
+  WHERE e.user.id = :id
+""")
+  Optional<ElderlyProfile> findWithSocialWorkerProfileByUserId(Long id);
 }
