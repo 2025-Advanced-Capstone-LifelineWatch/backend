@@ -35,6 +35,7 @@ public class AlertController {
   }
 
   @GetMapping("/{elderlyId}")
+  @Operation(summary = "알람 확인 API", description = "발생한 알람을 확인하게 해주는 API입니다.")
   public ApiResponse<NotificationLog> getNotifications(@PathVariable Long elderlyId) {
     List<NotificationLog> logs =
         notificationLogRepository.findByElderlyIdOrderBySentAtDesc(elderlyId);
