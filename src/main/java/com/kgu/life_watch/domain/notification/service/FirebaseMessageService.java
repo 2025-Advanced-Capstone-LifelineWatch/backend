@@ -53,29 +53,48 @@ public class FirebaseMessageService {
 
   @Transactional(readOnly = true)
   public void sendMedicineAlarm(MedicineAlarm alarm) {
-    String fcmToken = alarm.getUser().getFcmToken();
-    if (fcmToken == null) {
-      throw LifelineException.from(ErrorCode.FCM_TOKEN_NOT_FOUND);
+    String elderlyFcm = alarm.getUser().getFcmToken();
+    String body =
+        "약 이름: "
+            + alarm.getMedicineName()
+            + "\n복용 시간: "
+            + alarm.getTime().toString()
+            + (alarm.getMedicineNote() != null ? "\n주의사항: " + alarm.getMedicineNote() : "");
+
+    // 노인에게 알림
+    if (elderlyFcm != null) {
+      Message elderlyMessage =
+          Message.builder()
+              .putData("title", "약 복용 알림")
+              .putData("body", body)
+              .setToken(elderlyFcm)
+              .build();
+      try {
+        FirebaseMessaging.getInstance().send(elderlyMessage);
+      } catch (FirebaseMessagingException e) {
+        throw LifelineException.from(ErrorCode.FCM_SEND_FAILED);
+      }
     }
 
-    // 띄어쓰기로 가독성 향상
-    Message message =
-        Message.builder()
-            .putData("title", "약 복용 알림")
-            .putData(
-                "body",
-                "약 이름: "
-                    + alarm.getMedicineName()
-                    + "\n복용 시간: "
-                    + alarm.getTime().toString()
-                    + (alarm.getMedicineNote() != null ? "\n주의사항: " + alarm.getMedicineNote() : ""))
-            .setToken(fcmToken)
-            .build();
+    // 복지사에게도 알림
+    ElderlyProfile elderly =
+        elderlyProfileRepository
+            .findWithSocialWorkerProfileByUserId(alarm.getUser().getId())
+            .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
 
-    try {
-      FirebaseMessaging.getInstance().send(message);
-    } catch (FirebaseMessagingException e) {
-      throw LifelineException.from(ErrorCode.FCM_SEND_FAILED);
+    String workerFcm = elderly.getSocialWorkerProfile().getUser().getFcmToken();
+    if (workerFcm != null) {
+      Message workerMessage =
+          Message.builder()
+              .putData("title", "복지 대상자 약 복용 알림")
+              .putData("body", body)
+              .setToken(workerFcm)
+              .build();
+      try {
+        FirebaseMessaging.getInstance().send(workerMessage);
+      } catch (FirebaseMessagingException e) {
+        throw LifelineException.from(ErrorCode.FCM_SEND_FAILED);
+      }
     }
   }
 }
