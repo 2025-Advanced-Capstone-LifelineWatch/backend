@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import com.kgu.life_watch.domain.notification.entity.MedicineAlarm;
+import com.kgu.life_watch.domain.notification.entity.NotificationLog;
+import com.kgu.life_watch.domain.notification.repository.NotificationLogRepository;
 import com.kgu.life_watch.domain.user.entity.ElderlyProfile;
 import com.kgu.life_watch.domain.user.entity.SocialWorkerProfile;
 import com.kgu.life_watch.domain.user.repository.ElderlyProfileRepository;
@@ -20,6 +22,7 @@ import com.kgu.life_watch.global.exception.LifelineException;
 public class FirebaseMessageService {
 
   private final ElderlyProfileRepository elderlyProfileRepository;
+  private final NotificationLogRepository notificationLogRepository;
 
   @Transactional(readOnly = true)
   public void sendEmergencyAlert(Long elderlyId, String label, String explanation) {
@@ -42,6 +45,7 @@ public class FirebaseMessageService {
 
     try {
       FirebaseMessaging.getInstance().send(message);
+      notificationLogRepository.save(NotificationLog.of(elderlyId, label, explanation));
     } catch (FirebaseMessagingException e) {
       throw LifelineException.from(ErrorCode.FCM_SEND_FAILED);
     }
