@@ -44,27 +44,23 @@ public class ChatRoom {
   @Column(updatable = false)
   private LocalDateTime createdAt;
 
+  @Builder.Default
   @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ChatParticipation> participation; // 채팅방의 참여 정보
+  private List<ChatParticipation> participation = new ArrayList<>(); // 채팅방의 참여 정보
 
-  @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private List<ChatMessage> messages;
+  @Builder.Default
+  @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<ChatMessage> messages = new ArrayList<>();
 
   public List<ChatMessage> getChatMessages() {
     return messages;
   }
 
   public void addParticipation(ChatParticipation chatParticipation) {
-    if (participation == null) {
-      participation = new ArrayList<>();
-    }
     participation.add(chatParticipation);
   }
 
   public void addMessage(ChatMessage chatMessage) {
-    if (messages == null) {
-      messages = new ArrayList<>();
-    }
     messages.add(chatMessage);
   }
 
