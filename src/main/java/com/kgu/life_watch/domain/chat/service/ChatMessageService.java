@@ -67,7 +67,7 @@ public class ChatMessageService {
       throw LifelineException.from(ErrorCode.CHAT_ROOM_NOT_OWNER);
     }
 
-    List<ChatMessage> chatMessagesRoom = chatRoom.getChatMessages();
+    List<ChatMessage> chatMessagesRoom = chatMessageRepository.findAllByChatRoomId(roomId);
     return ChatMessageResponse.fromEntitieList(chatMessagesRoom);
   }
 
