@@ -24,7 +24,7 @@ public class FirebaseMessageService {
   private final ElderlyProfileRepository elderlyProfileRepository;
   private final NotificationLogRepository notificationLogRepository;
 
-  @Transactional(readOnly = true)
+  @Transactional
   public void sendEmergencyAlert(Long elderlyId, String label, String explanation) {
     ElderlyProfile elderly =
         elderlyProfileRepository
@@ -51,7 +51,7 @@ public class FirebaseMessageService {
     }
   }
 
-  @Transactional(readOnly = true)
+  @Transactional
   public void sendMedicineAlarm(MedicineAlarm alarm) {
     String elderlyFcm = alarm.getUser().getFcmToken();
     String body =
