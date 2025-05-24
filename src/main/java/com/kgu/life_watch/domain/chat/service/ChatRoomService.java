@@ -54,18 +54,24 @@ public class ChatRoomService {
     // 이미 해당 룸메이트와 채팅방을 만든 적이 있다면 채팅방 정보를 바로 리턴
     List<ChatParticipation> chatParticipationList =
         chatParticipationService.getParticipationByUser(user);
+
     for (ChatParticipation chatParticipation : chatParticipationList) {
-      if (Objects.equals(
-              chatParticipation.getChatRoom().getParticipation().get(0).getUser().getId(),
-              receiver.getId())
-          || Objects.equals(
-              chatParticipation.getChatRoom().getParticipation().get(1).getUser().getId(),
-              user.getId())) {
-        ChatRoom existingChatRoom = chatParticipation.getChatRoom();
+      ChatRoom chatRoom = chatParticipation.getChatRoom();
+
+      List<Long> participantIds =
+          chatRoom.getParticipation().stream().map(p -> p.getUser().getId()).toList();
+
+      if (participantIds.size() == 2
+          && participantIds.contains(user.getId())
+          && participantIds.contains(receiver.getId())) {
+
+        // 여기서 상태가 DEACTIVATE이면 ACTIVATE로 변경
+        if (chatRoom.getStatus() == RoomStatus.DEACTIVATE) {
+          chatRoom.updateStatus(RoomStatus.ACTIVATE);
+        }
+
         return ChatRoomResponse.fromEntity(
-            existingChatRoom,
-            receiver,
-            chatMessageService.getLastMessage(existingChatRoom.getId()).orElse(null));
+            chatRoom, receiver, chatMessageService.getLastMessage(chatRoom.getId()).orElse(null));
       }
     }
     ChatRoom chatRoom =
@@ -76,9 +82,6 @@ public class ChatRoomService {
 
     // 생성된 채팅방의 참여자로 나랑 룸메를 저장
     chatParticipationService.joinRoom(chatRoom, user, receiver);
-
-    // 아직 대화를 나누지 않아서 chat 내용은 null 처리
-    log.info("새로 만들었음.");
 
     return ChatRoomResponse.fromEntity(savedChatRoom, receiver, null);
   }
@@ -97,9 +100,6 @@ public class ChatRoomService {
           chatRoomRepository
               .findById(roomId)
               .orElseThrow(() -> LifelineException.from(ErrorCode.CHAT_ROOM_NOT_FOUND));
-      if (chatRoom.getStatus() == RoomStatus.DEACTIVATE) {
-        continue;
-      }
 
       Optional<ChatMessage> chatMessage = chatMessageService.getLastMessage(roomId);
       List<ChatParticipation> usersInRoom = chatRoom.getParticipation();

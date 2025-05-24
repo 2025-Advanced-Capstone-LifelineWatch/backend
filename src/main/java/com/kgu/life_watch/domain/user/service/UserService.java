@@ -8,6 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.kgu.life_watch.domain.auth.dto.request.UserUpdateRequest;
+import com.kgu.life_watch.domain.chat.entity.ChatRoom;
+import com.kgu.life_watch.domain.chat.entity.RoomStatus;
+import com.kgu.life_watch.domain.chat.entity.mapping.ChatParticipation;
+import com.kgu.life_watch.domain.chat.repository.ChatRoomRepository;
+import com.kgu.life_watch.domain.chat.service.ChatParticipationService;
 import com.kgu.life_watch.domain.chat.service.ChatRoomService;
 import com.kgu.life_watch.domain.user.dto.response.ElderlySimpleInfoResponse;
 import com.kgu.life_watch.domain.user.dto.response.UserProfileResponse;
@@ -27,6 +32,8 @@ public class UserService {
   private final SocialWorkerProfileRepository socialWorkerProfileRepository;
   private final ChatRoomService chatRoomService;
   private final UserRepository userRepository;
+  private final ChatRoomRepository chatRoomRepository;
+  private final ChatParticipationService chatParticipationService;
 
   @Transactional
   public void assignElderly(Long elderlyId, Long socialWorkerId) {
@@ -60,6 +67,27 @@ public class UserService {
     socialWorker.getAssignedSeniors().remove(elderly);
     // 노인의 사회복지사 연관관계 해제
     elderly.setSocialWorkerProfile(null);
+
+    // 채팅방 상태 바꾸기
+    // 1. 참여 중인 채팅방 리스트 가져오기 (사회복지사 기준)
+    List<ChatParticipation> participationList =
+        chatParticipationService.getParticipationByUser(socialWorker.getUser());
+
+    // 2. 노인과 둘 다 참여한 채팅방 찾기
+    for (ChatParticipation participation : participationList) {
+      ChatRoom chatRoom = participation.getChatRoom();
+
+      List<Long> participantIds =
+          chatRoom.getParticipation().stream().map(p -> p.getUser().getId()).toList();
+
+      if (participantIds.size() == 2
+          && participantIds.contains(socialWorker.getUser().getId())
+          && participantIds.contains(elderly.getUser().getId())) {
+
+        chatRoom.updateStatus(RoomStatus.DEACTIVATE);
+        break;
+      }
+    }
   }
 
   @Transactional(readOnly = true)
