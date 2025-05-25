@@ -12,7 +12,7 @@ import com.kgu.life_watch.domain.notification.entity.MedicineAlarm;
 public interface MedicineAlarmRepository extends JpaRepository<MedicineAlarm, Long> {
 
   @Query(
-      "SELECT a FROM MedicineAlarm a WHERE a.time >= :start AND a.time < :end AND a.status = 'SCHEDULED'")
+      "SELECT a FROM MedicineAlarm a JOIN FETCH a.user WHERE a.time >= :start AND a.time < :end AND a.status = 'SCHEDULED'")
   List<MedicineAlarm> findAlarmsByTimeBetween(
       @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
