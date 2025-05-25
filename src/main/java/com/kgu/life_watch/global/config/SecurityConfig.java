@@ -60,7 +60,8 @@ public class SecurityConfig {
                         "/api-docs/**",
                         "/v1/api-docs/**",
                         "/health/**",
-                        "/chat/**")
+                        "/chat/**",
+                        "/ws-chat/**")
                     .permitAll()
                     .requestMatchers("/api/auth/**", "/api/alert/**")
                     .permitAll() // 로그인과 회원가입은 인증 없이 접근 가능
