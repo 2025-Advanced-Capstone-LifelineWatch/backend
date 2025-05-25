@@ -59,4 +59,12 @@ public class AuthSmsService {
             })
         .orElse(false);
   }
+
+  @Transactional(readOnly = true)
+  public boolean isVerified(String phoneNumber) {
+    return smsVerificationRepository
+        .findTopByPhoneNumberOrderByCreatedAtDesc(phoneNumber)
+        .filter(SmsVerification::isUsed)
+        .isPresent();
+  }
 }
