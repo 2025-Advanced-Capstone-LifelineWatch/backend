@@ -34,6 +34,10 @@ public class AuthService {
 
   @Transactional
   public void signUpElderly(ElderlySignUpRequest request) {
+    if (!authSmsService.isVerified(request.phoneNumber())) {
+      throw LifelineException.from(ErrorCode.SMS_NOT_VERIFIED);
+    }
+
     if (userRepository.existsByLoginId(request.loginId())) {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
     }
@@ -89,6 +93,9 @@ public class AuthService {
 
   @Transactional
   public void signUpSocialWorker(SocialWorkerSignUpRequest request) {
+    if (!authSmsService.isVerified(request.phoneNumber())) {
+      throw LifelineException.from(ErrorCode.SMS_NOT_VERIFIED);
+    }
     if (userRepository.existsByLoginId(request.loginId())) {
       throw LifelineException.from(ErrorCode.ACCOUNT_USERNAME_EXIST);
     }
