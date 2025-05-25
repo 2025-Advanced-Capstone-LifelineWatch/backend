@@ -50,6 +50,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             "http://localhost:3000",
             "http://localhost:8080")
         .withSockJS(); // 추후 배포시 수정 필요
+
+    // 안드로이드용 (WebSocket 직접 연결)
+    registry
+        .addEndpoint("/ws-chat")
+        .setAllowedOriginPatterns("*"); // 개발 시엔 *, 배포 시 안드로이드 Origin에 맞게 설정
   }
 
   @Override
