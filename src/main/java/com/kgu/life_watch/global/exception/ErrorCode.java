@@ -62,12 +62,12 @@ public enum ErrorCode {
   PASSWORD_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "비밀번호는 영문과 숫자를 혼합하여 10자 이상이어야 합니다."),
   GENDER_REQUIRED(HttpStatus.BAD_REQUEST, "성별은 필수입니다."),
   PROFILE_IMAGE_REQUIRED(HttpStatus.BAD_REQUEST, "프로필 이미지 선택은 필수입니다."),
-
   // alarm
   ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "약 알람 그룹을 찾을 수 없습니다."),
 
   // sns
   SMS_VERIFICATION_FAILED(HttpStatus.UNAUTHORIZED, "검증 코드가 일치하지 않습니다!"),
+  SMS_NOT_VERIFIED(HttpStatus.BAD_REQUEST, "휴대폰 인증이 되지 않았습니다."),
 
   // firebase
   FIREBASE_ENV_NOT_FOUND(HttpStatus.NOT_FOUND, "Firebase 환경변수를 찾을 수 없습니다."),
