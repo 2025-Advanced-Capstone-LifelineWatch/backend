@@ -40,6 +40,8 @@ public class FirebaseMessageService {
         Message.builder()
             .putData("title", "응급상황 발생!")
             .putData("body", explanation)
+            .putData("elderlyId", String.valueOf(elderly.getUser().getId()))
+            .putData("elderlyName", elderly.getUser().getName())
             .setToken(socialWorker.getUser().getFcmToken())
             .build();
 
@@ -88,6 +90,8 @@ public class FirebaseMessageService {
           Message.builder()
               .putData("title", "복지 대상자 약 복용 알림")
               .putData("body", body)
+              .putData("elderlyId", String.valueOf(elderly.getUser().getId()))
+              .putData("elderlyName", elderly.getUser().getName())
               .setToken(workerFcm)
               .build();
       try {
