@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class MedicineAlarmScheduler {
   private final FirebaseMessageService firebaseMessageService;
 
   @Scheduled(cron = "0 * * * * *") // 매 분 실행
+  @Transactional
   public void sendAndScheduleMedicineAlarms() {
     LocalDateTime now = LocalDateTime.now();
     LocalDateTime nextMinute = now.plusMinutes(1);
@@ -29,7 +31,8 @@ public class MedicineAlarmScheduler {
     LocalDateTime from = now.withSecond(0).withNano(0);
     LocalDateTime to = nextMinute.withSecond(0).withNano(0);
 
-    List<MedicineAlarm> alarms = medicineAlarmRepository.findAlarmsByTimeBetween(from, to);
+    List<MedicineAlarm> alarms =
+        medicineAlarmRepository.findAlarmsWithAllUserInfoByTimeBetween(from, to);
 
     for (MedicineAlarm alarm : alarms) {
       firebaseMessageService.sendMedicineAlarm(alarm);
