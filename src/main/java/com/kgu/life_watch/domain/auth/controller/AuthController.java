@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import com.kgu.life_watch.domain.auth.dto.request.ElderlySignUpRequest;
-import com.kgu.life_watch.domain.auth.dto.request.FcmTokenUpdateRequest;
-import com.kgu.life_watch.domain.auth.dto.request.LoginRequest;
-import com.kgu.life_watch.domain.auth.dto.request.SocialWorkerSignUpRequest;
+import com.kgu.life_watch.domain.auth.dto.request.*;
 import com.kgu.life_watch.domain.auth.dto.response.LoginResponse;
 import com.kgu.life_watch.domain.auth.service.AuthService;
 import com.kgu.life_watch.global.domain.SuccessCode;
@@ -54,6 +51,13 @@ public class AuthController {
       @AuthenticationPrincipal CustomUserDetails userDetails,
       @Valid @RequestBody FcmTokenUpdateRequest request) {
     authService.updateFcmToken(userDetails.user().getId(), request.fcmToken());
+    return new ApiResponse<>(SuccessCode.REQUEST_OK);
+  }
+
+  @PostMapping("/verify-identity")
+  @Operation(summary = "아이디+전화번호 본인 확인", description = "아이디와 전화번호가 일치하는 사용자가 존재하는지 확인합니다.")
+  public ApiResponse<Void> verifyIdentity(@RequestBody IdentityVerificationRequest request) {
+    authService.verifyIdentity(request.loginId(), request.phoneNumber());
     return new ApiResponse<>(SuccessCode.REQUEST_OK);
   }
 }
