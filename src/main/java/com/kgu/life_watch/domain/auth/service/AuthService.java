@@ -137,6 +137,9 @@ public class AuthService {
       ElderlyProfile elderly = user.getElderlyProfile();
       SocialWorkerProfile worker = elderly.getSocialWorkerProfile();
 
+      String phoneNumber = user.getPhoneNumber();
+      String address = user.getAddress();
+
       // NullPointerException 방지
       String socialWorkerName = null;
       String socialWorkerPhone = null;
@@ -155,12 +158,24 @@ public class AuthService {
           socialWorkerName,
           socialWorkerPhone,
           user.getId(),
-          false);
+          false,
+          phoneNumber,
+          address);
     }
 
     if (user.getRole() == User.Role.SOCIAL_WORKER && user.getSocialWorkerProfile() != null) {
       return new LoginResponse(
-          user.getName(), jwt, user.getBirthDate(), null, null, null, null, user.getId(), true);
+          user.getName(),
+          jwt,
+          user.getBirthDate(),
+          null,
+          null,
+          null,
+          null,
+          user.getId(),
+          true,
+          user.getPhoneNumber(),
+          user.getAddress());
     }
 
     throw LifelineException.from(ErrorCode.INCORRECT_ACCOUNT);

@@ -11,4 +11,6 @@ public record LoginResponse(
     String socialWorkerName,
     String socialWorkerPhone,
     Long userId,
-    boolean isSocialWorker) {}
+    boolean isSocialWorker,
+    String phoneNumber,
+    String address) {}
