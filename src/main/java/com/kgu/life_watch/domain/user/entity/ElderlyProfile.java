@@ -23,7 +23,7 @@ public class ElderlyProfile {
   // SocialWorkerProfile에 assignedElderId (단일 Long) -> 여러 노인과 매핑하는 구조로 바꿔야 함.
   // 즉, 1명의 사회복지사가 여러 명의 노인을 담당할 수 있는 구조로 변경해야 함.
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "social_worker_id")
+  @JoinColumn(name = "social_worker_id", referencedColumnName = "user_id")
   private SocialWorkerProfile socialWorkerProfile;
 
   @Column(nullable = false)
