@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import com.kgu.life_watch.domain.user.entity.ElderlyProfile;
 
@@ -19,12 +18,7 @@ public interface ElderlyProfileRepository extends JpaRepository<ElderlyProfile, 
 
   List<ElderlyProfile> findAllBySocialWorkerProfileId(Long socialWorkerProfileId);
 
-  @Query(
-      """
-  SELECT e FROM ElderlyProfile e
-  JOIN FETCH e.socialWorkerProfile sw
-  JOIN FETCH sw.user u
-  WHERE e.user.id = :id
-""")
-  Optional<ElderlyProfile> findWithSocialWorkerProfileByUserId(Long id);
+  // 노인의 userId를 기반으로 ElderlyProfile과 그에 연결된 SocialWorkerProfile과 User까지 함께 로딩
+  @EntityGraph(attributePaths = {"socialWorkerProfile.user"})
+  Optional<ElderlyProfile> findByUserId(Long userId);
 }

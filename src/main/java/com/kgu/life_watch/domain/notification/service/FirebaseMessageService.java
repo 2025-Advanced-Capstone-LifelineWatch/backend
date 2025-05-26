@@ -28,7 +28,7 @@ public class FirebaseMessageService {
   public void sendEmergencyAlert(Long elderlyId, String label, String explanation) {
     ElderlyProfile elderly =
         elderlyProfileRepository
-            .findWithSocialWorkerProfileByUserId(elderlyId)
+            .findByUserId(elderlyId)
             .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
 
     SocialWorkerProfile socialWorker = elderly.getSocialWorkerProfile();
@@ -81,7 +81,7 @@ public class FirebaseMessageService {
     // 복지사에게도 알림
     ElderlyProfile elderly =
         elderlyProfileRepository
-            .findWithSocialWorkerProfileByUserId(alarm.getUser().getId())
+            .findByUserId(alarm.getUser().getId())
             .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
 
     String workerFcm = elderly.getSocialWorkerProfile().getUser().getFcmToken();
@@ -96,6 +96,11 @@ public class FirebaseMessageService {
               .build();
       try {
         FirebaseMessaging.getInstance().send(workerMessage);
+        log.info(
+            "복지사에게 약 알람 전송 성공: token={}, 노인={}, 약={}",
+            workerFcm,
+            elderly.getUser().getName(),
+            alarm.getMedicineName());
       } catch (FirebaseMessagingException e) {
         throw LifelineException.from(ErrorCode.FCM_SEND_FAILED);
       }
