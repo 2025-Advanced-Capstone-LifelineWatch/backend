@@ -190,4 +190,11 @@ public class AuthService {
 
     user.updateFcmToken(fcmToken);
   }
+
+  @Transactional(readOnly = true)
+  public void verifyIdentity(String loginId, String phoneNumber) {
+    userRepository
+        .findByLoginIdAndPhoneNumber(loginId, phoneNumber)
+        .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
+  }
 }
