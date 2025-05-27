@@ -84,26 +84,24 @@ public class FirebaseMessageService {
             .findByUserId(alarm.getUser().getId())
             .orElseThrow(() -> LifelineException.from(ErrorCode.MEMBER_NOT_FOUND));
 
-    String workerFcm = elderly.getSocialWorkerProfile().getUser().getFcmToken();
-    if (workerFcm != null) {
-      Message workerMessage =
-          Message.builder()
-              .putData("title", "복지 대상자 약 복용 알림")
-              .putData("body", body)
-              .putData("elderlyId", String.valueOf(elderly.getUser().getId()))
-              .putData("elderlyName", elderly.getUser().getName())
-              .setToken(workerFcm)
-              .build();
-      try {
-        FirebaseMessaging.getInstance().send(workerMessage);
-        log.info(
-            "복지사에게 약 알람 전송 성공: token={}, 노인={}, 약={}",
-            workerFcm,
-            elderly.getUser().getName(),
-            alarm.getMedicineName());
-      } catch (FirebaseMessagingException e) {
-        throw LifelineException.from(ErrorCode.FCM_SEND_FAILED);
-      }
+    SocialWorkerProfile worker = elderly.getSocialWorkerProfile();
+    if (worker == null || worker.getUser() == null || worker.getUser().getFcmToken() == null) {
+      throw LifelineException.from(ErrorCode.FCM_TOKEN_NOT_FOUND);
+    }
+
+    String workerFcm = worker.getUser().getFcmToken();
+    Message workerMessage =
+        Message.builder()
+            .putData("title", "복지 대상자 약 복용 알림")
+            .putData("body", body)
+            .putData("elderlyId", String.valueOf(elderly.getUser().getId()))
+            .putData("elderlyName", elderly.getUser().getName())
+            .setToken(workerFcm)
+            .build();
+    try {
+      FirebaseMessaging.getInstance().send(workerMessage);
+    } catch (FirebaseMessagingException e) {
+      throw LifelineException.from(ErrorCode.FCM_SEND_FAILED);
     }
   }
 }
