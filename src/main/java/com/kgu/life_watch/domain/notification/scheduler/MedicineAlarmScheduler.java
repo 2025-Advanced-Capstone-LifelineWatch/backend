@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.kgu.life_watch.domain.notification.entity.MedicineAlarm;
 import com.kgu.life_watch.domain.notification.repository.MedicineAlarmRepository;
 import com.kgu.life_watch.domain.notification.service.FirebaseMessageService;
+import com.kgu.life_watch.domain.user.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor
@@ -21,20 +22,21 @@ public class MedicineAlarmScheduler {
 
   private final MedicineAlarmRepository medicineAlarmRepository;
   private final FirebaseMessageService firebaseMessageService;
+  private final UserRepository userRepository;
 
   @Scheduled(cron = "0 * * * * *") // 매 분 실행
   @Transactional
   public void sendAndScheduleMedicineAlarms() {
     LocalDateTime now = LocalDateTime.now();
-    LocalDateTime nextMinute = now.plusMinutes(1);
-
     LocalDateTime from = now.withSecond(0).withNano(0);
-    LocalDateTime to = nextMinute.withSecond(0).withNano(0);
+    LocalDateTime to = from.plusMinutes(1).plusSeconds(59);
 
     List<MedicineAlarm> alarms =
         medicineAlarmRepository.findAlarmsWithAllUserInfoByTimeBetween(from, to);
 
     for (MedicineAlarm alarm : alarms) {
+      String elderlyFcm = alarm.getUser().getFcmToken();
+
       firebaseMessageService.sendMedicineAlarm(alarm);
 
       switch (alarm.getRepeatCycle()) {
@@ -56,6 +58,7 @@ public class MedicineAlarmScheduler {
             .status(MedicineAlarm.AlarmStatus.SCHEDULED)
             .repeatCycle(current.getRepeatCycle())
             .build();
+
     medicineAlarmRepository.save(nextAlarm);
   }
 }
