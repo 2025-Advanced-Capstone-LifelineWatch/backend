@@ -12,7 +12,8 @@ public record MedicineAlarmDto(
     LocalDateTime time,
     String medicineNote,
     boolean completed,
-    String repeatCycle) {
+    String repeatCycle,
+    int dosage) {
 
   public static MedicineAlarmDto fromEntity(MedicineAlarm alarm) {
     return new MedicineAlarmDto(
@@ -22,6 +23,7 @@ public record MedicineAlarmDto(
         alarm.getTime(),
         alarm.getMedicineNote(),
         alarm.getStatus() == AlarmStatus.COMPLETE,
-        alarm.getRepeatCycle().name());
+        alarm.getRepeatCycle().name(),
+        alarm.getDosage());
   }
 }
