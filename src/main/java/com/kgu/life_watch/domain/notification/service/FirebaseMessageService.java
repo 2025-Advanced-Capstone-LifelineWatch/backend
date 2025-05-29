@@ -61,6 +61,9 @@ public class FirebaseMessageService {
             + alarm.getMedicineName()
             + "\n복용 시간: "
             + alarm.getTime().toString()
+            + "\n복용량: "
+            + alarm.getDosage()
+            + "알"
             + (alarm.getMedicineNote() != null ? "\n주의사항: " + alarm.getMedicineNote() : "");
 
     // 노인에게 알림
