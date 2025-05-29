@@ -61,6 +61,7 @@ public class AlarmGroupService {
               .time(alarmTime)
               .status(MedicineAlarm.AlarmStatus.SCHEDULED)
               .alarmGroup(alarmGroup)
+              .dosage(request.dosage())
               .build();
 
       medicineAlarmRepository.save(alarm);
@@ -91,12 +92,13 @@ public class AlarmGroupService {
       MedicineAlarm alarm =
           MedicineAlarm.builder()
               .user(user)
-              .medicineName(group.getMedicineName())
-              .medicineNote(group.getMedicineNote())
-              .repeatCycle(group.getRepeatCycle())
+              .medicineName(request.medicineName())
+              .medicineNote(request.medicineNote())
+              .repeatCycle(MedicineAlarm.RepeatCycle.valueOf(request.repeatCycle()))
               .time(alarmTime)
               .status(MedicineAlarm.AlarmStatus.SCHEDULED)
               .alarmGroup(group)
+              .dosage(request.dosage())
               .build();
       medicineAlarmRepository.save(alarm);
     }
@@ -132,12 +134,13 @@ public class AlarmGroupService {
       MedicineAlarm alarm =
           MedicineAlarm.builder()
               .user(user)
-              .medicineName(group.getMedicineName())
-              .medicineNote(group.getMedicineNote())
-              .repeatCycle(group.getRepeatCycle())
+              .medicineName(request.medicineName())
+              .medicineNote(request.medicineNote())
+              .repeatCycle(MedicineAlarm.RepeatCycle.valueOf(request.repeatCycle()))
               .time(alarmTime)
               .status(MedicineAlarm.AlarmStatus.SCHEDULED)
               .alarmGroup(group)
+              .dosage(request.dosage())
               .build();
       medicineAlarmRepository.save(alarm);
     }
@@ -176,6 +179,7 @@ public class AlarmGroupService {
             .status(MedicineAlarm.AlarmStatus.SCHEDULED)
             .repeatCycle(current.getRepeatCycle())
             .alarmGroup(current.getAlarmGroup())
+            .dosage(current.getDosage())
             .build();
 
     medicineAlarmRepository.save(nextAlarm);
