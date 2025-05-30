@@ -39,7 +39,10 @@ public class AlarmGroupService {
             .build();
     alarmGroupRepository.save(alarmGroup);
 
-    for (String timeStr : request.times()) {
+    for (int i = 0; i < request.times().size(); i++) {
+      String timeStr = request.times().get(i);
+      double dosage = request.dosage().get(i);
+
       LocalTime time = LocalTime.parse(timeStr);
       LocalDateTime alarmTime =
           LocalDateTime.now()
@@ -61,7 +64,7 @@ public class AlarmGroupService {
               .time(alarmTime)
               .status(MedicineAlarm.AlarmStatus.SCHEDULED)
               .alarmGroup(alarmGroup)
-              .dosage(request.dosage())
+              .dosage(dosage)
               .build();
 
       medicineAlarmRepository.save(alarm);
@@ -76,7 +79,10 @@ public class AlarmGroupService {
             .findById(groupId)
             .orElseThrow(() -> LifelineException.from(ErrorCode.ALARM_NOT_FOUND));
 
-    for (String timeStr : request.times()) {
+    for (int i = 0; i < request.times().size(); i++) {
+      String timeStr = request.times().get(i);
+      double dosage = request.dosage().get(i);
+
       LocalTime time = LocalTime.parse(timeStr);
       LocalDateTime alarmTime =
           LocalDateTime.now()
@@ -98,7 +104,7 @@ public class AlarmGroupService {
               .time(alarmTime)
               .status(MedicineAlarm.AlarmStatus.SCHEDULED)
               .alarmGroup(group)
-              .dosage(request.dosage())
+              .dosage(dosage)
               .build();
       medicineAlarmRepository.save(alarm);
     }
@@ -118,7 +124,10 @@ public class AlarmGroupService {
     group.updateInfo(request.medicineName(), request.medicineNote());
     group.updateRepeatCycle(MedicineAlarm.RepeatCycle.valueOf(request.repeatCycle()));
 
-    for (String timeStr : request.times()) {
+    for (int i = 0; i < request.times().size(); i++) {
+      String timeStr = request.times().get(i);
+      double dosage = request.dosage().get(i);
+
       LocalTime time = LocalTime.parse(timeStr);
       LocalDateTime alarmTime =
           LocalDateTime.now()
@@ -140,7 +149,7 @@ public class AlarmGroupService {
               .time(alarmTime)
               .status(MedicineAlarm.AlarmStatus.SCHEDULED)
               .alarmGroup(group)
-              .dosage(request.dosage())
+              .dosage(dosage)
               .build();
       medicineAlarmRepository.save(alarm);
     }
@@ -197,7 +206,7 @@ public class AlarmGroupService {
         .toList();
   }
 
-  // 그룹 삭제 (cascade = 알람 포함)
+  // 그룹 삭제
   @Transactional
   public void deleteGroup(Long groupId) {
     AlarmGroup group =

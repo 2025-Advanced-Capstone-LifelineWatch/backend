@@ -12,4 +12,4 @@ public record MedicineAlarmRequest(
     @NotBlank @Pattern(regexp = "ONCE|DAILY|EVERY_OTHER_DAY|WEEKLY") String repeatCycle,
     String medicineNote,
     @NotEmpty List<@Pattern(regexp = "^\\d{2}:\\d{2}$") String> times, // (08:00, 13:00) 이런식으로 쓰기
-    @NotNull(message = "복용량은 필수입니다.") int dosage) {}
+    @NotNull(message = "복용량은 필수입니다.") List<Double> dosage) {}

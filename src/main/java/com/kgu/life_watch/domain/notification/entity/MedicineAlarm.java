@@ -37,7 +37,7 @@ public class MedicineAlarm extends BaseEntity {
   private RepeatCycle repeatCycle;
 
   @Column(nullable = false)
-  private int dosage; // 복용량 (예: 2 알)
+  private double dosage; // 복용량 (예: 2 알)
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
