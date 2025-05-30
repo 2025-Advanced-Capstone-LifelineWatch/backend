@@ -47,10 +47,17 @@ public class FirebaseMessageService {
 
     try {
       FirebaseMessaging.getInstance().send(message);
-      notificationLogRepository.save(NotificationLog.of(elderlyId, label, explanation));
+
+      if (isAbnormal(label)) {
+        notificationLogRepository.save(NotificationLog.of(elderlyId, label, explanation));
+      }
     } catch (FirebaseMessagingException e) {
       throw LifelineException.from(ErrorCode.FCM_SEND_FAILED);
     }
+  }
+
+  private boolean isAbnormal(String label) {
+    return label != null && (label.contains("Emergency (비정상)"));
   }
 
   @Transactional
