@@ -13,7 +13,7 @@ public record MedicineAlarmDto(
     String medicineNote,
     boolean completed,
     String repeatCycle,
-    int dosage) {
+    double dosage) {
 
   public static MedicineAlarmDto fromEntity(MedicineAlarm alarm) {
     return new MedicineAlarmDto(
