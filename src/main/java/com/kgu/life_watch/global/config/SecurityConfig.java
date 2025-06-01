@@ -85,7 +85,7 @@ public class SecurityConfig {
             "http://localhost:8080",
             "https://jiangxy.github.io",
             "https://server.lifewatch.store",
-            "https://lifewatch.gcdn.ntruss.com")); // 추후에 배포시 수정 필요
+            "http://frotend.s3-website.kr.object.ncloudstorage.com")); // 추후에 배포시 수정 필요
     configuration.setAllowedMethods(
         Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD")); // 허용할 HTTP 메서드
     configuration.setAllowedHeaders(
