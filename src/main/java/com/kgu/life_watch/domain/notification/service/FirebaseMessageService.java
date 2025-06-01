@@ -42,6 +42,8 @@ public class FirebaseMessageService {
             .putData("body", explanation)
             .putData("elderlyId", String.valueOf(elderly.getUser().getId()))
             .putData("elderlyName", elderly.getUser().getName())
+            .setNotification(
+                Notification.builder().setTitle("응급상황 발생!").setBody(explanation).build())
             .setToken(socialWorker.getUser().getFcmToken())
             .build();
 
@@ -79,8 +81,10 @@ public class FirebaseMessageService {
           Message.builder()
               .putData("title", "약 복용 알림")
               .putData("body", body)
+              .setNotification(Notification.builder().setTitle("약 복용 알림").setBody(body).build())
               .setToken(elderlyFcm)
               .build();
+
       try {
         FirebaseMessaging.getInstance().send(elderlyMessage);
       } catch (FirebaseMessagingException e) {
@@ -106,8 +110,11 @@ public class FirebaseMessageService {
             .putData("body", body)
             .putData("elderlyId", String.valueOf(elderly.getUser().getId()))
             .putData("elderlyName", elderly.getUser().getName())
+            .setNotification(
+                Notification.builder().setTitle("복지 대상자 약 복용 알림").setBody(body).build())
             .setToken(workerFcm)
             .build();
+
     try {
       FirebaseMessaging.getInstance().send(workerMessage);
     } catch (FirebaseMessagingException e) {
