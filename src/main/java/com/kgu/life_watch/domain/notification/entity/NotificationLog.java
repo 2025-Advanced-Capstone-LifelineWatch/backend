@@ -18,7 +18,11 @@ public class NotificationLog {
 
   private Long elderlyId;
   private String title;
+
+  @Lob
+  @Column(columnDefinition = "LONGTEXT")
   private String message;
+
   private LocalDateTime sentAt;
 
   public static NotificationLog of(Long elderlyId, String title, String message) {
