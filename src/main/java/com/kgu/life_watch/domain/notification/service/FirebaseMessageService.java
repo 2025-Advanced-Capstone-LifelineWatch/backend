@@ -36,20 +36,22 @@ public class FirebaseMessageService {
       throw LifelineException.from(ErrorCode.FCM_TOKEN_NOT_FOUND);
     }
 
+    String name = elderly.getUser().getName();
+    String title = "응급상황 - " + name;
+    String body = name + "님에게 응급상황 발생!\n" + explanation;
+
     Message message =
         Message.builder()
-            .putData("title", "응급상황 발생!")
-            .putData("body", explanation)
+            .putData("title", title)
+            .putData("body", body)
             .putData("elderlyId", String.valueOf(elderly.getUser().getId()))
-            .putData("elderlyName", elderly.getUser().getName())
-            .setNotification(
-                Notification.builder().setTitle("응급상황 발생!").setBody(explanation).build())
+            .putData("elderlyName", name)
+            .setNotification(Notification.builder().setTitle(title).setBody(body).build())
             .setToken(socialWorker.getUser().getFcmToken())
             .build();
 
     try {
       FirebaseMessaging.getInstance().send(message);
-
       if (isAbnormal(label)) {
         notificationLogRepository.save(NotificationLog.of(elderlyId, label, explanation));
       }
@@ -65,11 +67,11 @@ public class FirebaseMessageService {
   @Transactional
   public void sendMedicineAlarm(MedicineAlarm alarm) {
     String elderlyFcm = alarm.getUser().getFcmToken();
-    String body =
+    String baseBody =
         "약 이름: "
             + alarm.getMedicineName()
             + "\n복용 시간: "
-            + alarm.getTime().toString()
+            + alarm.getTime()
             + "\n복용량: "
             + alarm.getDosage()
             + "알"
@@ -80,8 +82,8 @@ public class FirebaseMessageService {
       Message elderlyMessage =
           Message.builder()
               .putData("title", "약 복용 알림")
-              .putData("body", body)
-              .setNotification(Notification.builder().setTitle("약 복용 알림").setBody(body).build())
+              .putData("body", baseBody)
+              .setNotification(Notification.builder().setTitle("약 복용 알림").setBody(baseBody).build())
               .setToken(elderlyFcm)
               .build();
 
@@ -92,7 +94,7 @@ public class FirebaseMessageService {
       }
     }
 
-    // 복지사에게도 알림
+    // 복지사에게 알림 (이름 포함)
     ElderlyProfile elderly =
         elderlyProfileRepository
             .findByUserId(alarm.getUser().getId())
@@ -103,15 +105,18 @@ public class FirebaseMessageService {
       throw LifelineException.from(ErrorCode.FCM_TOKEN_NOT_FOUND);
     }
 
+    String name = elderly.getUser().getName();
     String workerFcm = worker.getUser().getFcmToken();
+    String workerBody = name + "님의 약 복용 알림\n" + baseBody;
+
     Message workerMessage =
         Message.builder()
             .putData("title", "복지 대상자 약 복용 알림")
-            .putData("body", body)
+            .putData("body", workerBody)
             .putData("elderlyId", String.valueOf(elderly.getUser().getId()))
-            .putData("elderlyName", elderly.getUser().getName())
+            .putData("elderlyName", name)
             .setNotification(
-                Notification.builder().setTitle("복지 대상자 약 복용 알림").setBody(body).build())
+                Notification.builder().setTitle("복지 대상자 약 복용 알림").setBody(workerBody).build())
             .setToken(workerFcm)
             .build();
 
