@@ -46,7 +46,6 @@ public class FirebaseMessageService {
             .putData("body", body)
             .putData("elderlyId", String.valueOf(elderly.getUser().getId()))
             .putData("elderlyName", name)
-            .setNotification(Notification.builder().setTitle(title).setBody(body).build())
             .setToken(socialWorker.getUser().getFcmToken())
             .build();
 
@@ -81,7 +80,7 @@ public class FirebaseMessageService {
             + "알"
             + (alarm.getMedicineNote() != null ? "\n주의사항: " + alarm.getMedicineNote() : "");
 
-    // 노인에게 알림
+    // 노인에게 알림 (앱용 → setNotification 사용)
     if (elderlyFcm != null) {
       Message elderlyMessage =
           Message.builder()
@@ -119,8 +118,6 @@ public class FirebaseMessageService {
             .putData("body", workerBody)
             .putData("elderlyId", String.valueOf(elderly.getUser().getId()))
             .putData("elderlyName", name)
-            .setNotification(
-                Notification.builder().setTitle("복지 대상자 약 복용 알림").setBody(workerBody).build())
             .setToken(workerFcm)
             .build();
 
