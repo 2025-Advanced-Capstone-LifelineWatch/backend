@@ -38,7 +38,7 @@ public class FirebaseMessageService {
 
     String name = elderly.getUser().getName();
     String title = "응급상황 - " + name;
-    String body = name + "님에게 응급상황 발생!\n" + explanation;
+    String body = "대상자: " + name + "\n" + "응급상황 발생\n" + explanation;
 
     Message message =
         Message.builder()
@@ -67,12 +67,16 @@ public class FirebaseMessageService {
   @Transactional
   public void sendMedicineAlarm(MedicineAlarm alarm) {
     String elderlyFcm = alarm.getUser().getFcmToken();
+
     String baseBody =
-        "약 이름: "
+        "약 복용 정보\n"
+            + "약 이름: "
             + alarm.getMedicineName()
-            + "\n복용 시간: "
+            + "\n"
+            + "복용 시간: "
             + alarm.getTime()
-            + "\n복용량: "
+            + "\n"
+            + "복용량: "
             + alarm.getDosage()
             + "알"
             + (alarm.getMedicineNote() != null ? "\n주의사항: " + alarm.getMedicineNote() : "");
@@ -94,7 +98,7 @@ public class FirebaseMessageService {
       }
     }
 
-    // 복지사에게 알림 (이름 포함)
+    // 복지사에게 알림
     ElderlyProfile elderly =
         elderlyProfileRepository
             .findByUserId(alarm.getUser().getId())
@@ -107,7 +111,7 @@ public class FirebaseMessageService {
 
     String name = elderly.getUser().getName();
     String workerFcm = worker.getUser().getFcmToken();
-    String workerBody = name + "님의 약 복용 알림\n" + baseBody;
+    String workerBody = "대상자: " + name + "\n" + "약 복용 알림\n" + baseBody;
 
     Message workerMessage =
         Message.builder()
