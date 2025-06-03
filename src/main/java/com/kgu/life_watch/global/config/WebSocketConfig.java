@@ -49,7 +49,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             "https://jiangxy.github.io",
             "http://localhost:3000",
             "http://localhost:8080",
-            "https://dqm6a810qt4d9.cloudfront.net")
+            "https://dqm6a810qt4d9.cloudfront.net",
+            "https://www.lifewatch.store")
         .withSockJS(); // 추후 배포시 수정 필요
 
     // 안드로이드용 (WebSocket 직접 연결)

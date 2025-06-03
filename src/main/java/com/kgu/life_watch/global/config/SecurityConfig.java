@@ -85,7 +85,8 @@ public class SecurityConfig {
             "http://localhost:8080",
             "https://jiangxy.github.io",
             "https://server.lifewatch.store",
-            "https://dqm6a810qt4d9.cloudfront.net")); // 추후에 배포시 수정 필요
+            "https://dqm6a810qt4d9.cloudfront.net",
+            "https://www.lifewatch.store")); // 추후에 배포시 수정 필요
     configuration.setAllowedMethods(
         Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD")); // 허용할 HTTP 메서드
     configuration.setAllowedHeaders(
