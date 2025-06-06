@@ -103,7 +103,7 @@ public class ChatRoomService {
 
       Optional<ChatMessage> chatMessage = chatMessageService.getLastMessage(roomId);
       List<ChatParticipation> usersInRoom = chatRoom.getParticipation();
-      // 룸메 객체를 추출
+      // 상대 유저 객체를 추출
       User receiver =
           Objects.equals(usersInRoom.get(0).getUser().getId(), user.getId())
               ? usersInRoom.get(1).getUser()

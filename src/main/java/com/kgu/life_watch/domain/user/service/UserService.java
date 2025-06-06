@@ -49,8 +49,32 @@ public class UserService {
     // 연관관계 편의 메서드를 통해 노인을 사회복지사에게 할당
     socialWorker.addElderly(elderly);
 
-    // 노인 할당시 채팅방 생성
-    chatRoomService.createChatRoom(elderly.getUser(), socialWorkerId);
+    // 기존 채팅방 존재 여부 확인
+    List<ChatParticipation> participationList =
+        chatParticipationService.getParticipationByUser(socialWorker.getUser());
+
+    boolean chatRoomExists = false;
+
+    for (ChatParticipation participation : participationList) {
+      ChatRoom chatRoom = participation.getChatRoom();
+
+      List<Long> participantIds =
+          chatRoom.getParticipation().stream().map(p -> p.getUser().getId()).toList();
+
+      if (participantIds.size() == 2
+          && participantIds.contains(socialWorker.getUser().getId())
+          && participantIds.contains(elderly.getUser().getId())) {
+        // 기존 채팅방 존재 → 상태만 ACTIVE로 변경
+        chatRoom.updateStatus(RoomStatus.ACTIVATE);
+        chatRoomExists = true;
+        break;
+      }
+    }
+
+    // 없으면 새로 생성
+    if (!chatRoomExists) {
+      chatRoomService.createChatRoom(elderly.getUser(), socialWorkerId);
+    }
   }
 
   @Transactional
