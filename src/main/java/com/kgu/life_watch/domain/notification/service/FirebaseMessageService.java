@@ -26,6 +26,11 @@ public class FirebaseMessageService {
 
   @Transactional
   public void sendEmergencyAlert(Long elderlyId, String label, String explanation) {
+    // 정상일 경우 아무 작업도 하지 않음
+    if (!isAbnormal(label)) {
+      return;
+    }
+
     ElderlyProfile elderly =
         elderlyProfileRepository
             .findByUserId(elderlyId)
@@ -51,16 +56,14 @@ public class FirebaseMessageService {
 
     try {
       FirebaseMessaging.getInstance().send(message);
-      if (isAbnormal(label)) {
-        notificationLogRepository.save(NotificationLog.of(elderlyId, label, explanation));
-      }
+      notificationLogRepository.save(NotificationLog.of(elderlyId, label, explanation));
     } catch (FirebaseMessagingException e) {
       throw LifelineException.from(ErrorCode.FCM_SEND_FAILED);
     }
   }
 
   private boolean isAbnormal(String label) {
-    return label != null && (label.contains("Emergency (비정상)"));
+    return label != null && label.contains("Emergency (비정상)");
   }
 
   @Transactional
@@ -97,7 +100,6 @@ public class FirebaseMessageService {
       }
     }
 
-    // 복지사에게 알림
     ElderlyProfile elderly =
         elderlyProfileRepository
             .findByUserId(alarm.getUser().getId())
